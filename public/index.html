@@ -4,9 +4,30 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
 	<title>kotoawase</title>
 
+	<script type="text/javascript" src="lib/jquery/jquery.js"></script>
 	<script type="text/javascript" src="lib/vue/vue.js"></script>
 </head>
 <body>
-	Hello
+	
+	<script type="text/template" id="simple_template">
+		<h1>Hello, {{message}}</h1>
+
+		<p class="{{message}}">color</h1>
+		<input v-model="color"></input>
+
+		<div class="counter" style="color: {{color}};">
+		  <p> counter: {{counter}} </p>
+		</div>
+
+		<button v-on='click: addTweet'>add tweet</button>
+		<ul class="tweets">
+		  <li v-repeat="tweets" v-on='click: erase(this)' data-index='{{$index}}'>
+		    {{name}}:{{$index}}:{{content}}
+		  </li>
+		</ul>
+	</script>
+
+	<script type="text/javascript" src="script/tutorial.js"></script>
+
 </body>
 </html>
