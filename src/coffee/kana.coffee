@@ -108,7 +108,6 @@ class KanaColumn extends KanaGroup
 					count++
 		return count
 
-
 class KanaTable
 	# @param size size of table
 	# @param kana array of Hiragana
@@ -193,3 +192,10 @@ class ComparatorList
 			if ( (kana_a == cmp.kana_a && kana_b == cmp.kana_b) || (kana_a == cmp.kana_b && kana_b == cmp.kana_a) )
 				return cmp.result
 		return false
+	toString: ->
+		str = ""
+		for cmp in @list
+			if str.length != 0
+				str += ', '
+			str += cmp.result
+		return str
