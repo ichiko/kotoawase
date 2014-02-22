@@ -18,6 +18,12 @@ module.exports = (grunt) ->
 					cleanBowerDir: false
 		coffee:
 			app:
+				options:
+					join: true
+				files: [
+					'public/script/main.js': ['src/coffee/kana.coffee', 'src/coffee/kotoawase.coffee']
+				]
+			all:
 				files: [
 					expand: true
 					cwd: 'src/coffee'

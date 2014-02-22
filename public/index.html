@@ -38,7 +38,7 @@
 			<table border=1>
 				<tr v-repeat="kanaTable.table" data-index='{{$index}}'>
 					<td v-repeat="row">
-						{{kana}}
+						<p style="background-color: {{color()}}">{{kana}}</p>
 					</td>
 				</tr>
 			</table>
@@ -54,7 +54,7 @@
 		</div>
 	</script>
 
-	<script type="text/javascript" src="script/kotoawase.js"></script>
+	<script type="text/javascript" src="script/main.js"></script>
 
 </body>
 </html>
