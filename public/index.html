@@ -12,7 +12,7 @@
 	<script type="text/template" id="simple_template">
 		<h1>Hello, {{message}}</h1>
 
-		<p class="{{message}}">color</h1>
+		<p class="{{message}}">color</p>
 		<input v-model="color"></input>
 
 		<div class="counter" style="color: {{color}};">
@@ -27,7 +27,34 @@
 		</ul>
 	</script>
 
-	<script type="text/javascript" src="script/tutorial.js"></script>
+	<!--<script type="text/javascript" src="script/tutorial.js"></script> -->
+
+	<script type="text/template" id="kotoawase-table">
+		<div align='center'>
+			<h1>ことあわせ</h1>
+
+			<p>score: {{score}}</p>
+
+			<table border=1>
+				<tr v-repeat="kanaTable.table" data-index='{{$index}}'>
+					<td v-repeat="row">
+						{{kana}}
+					</td>
+				</tr>
+			</table>
+
+			<div style="margin-top: 20px;">
+				<button v-on='click: shiftUp'>↑</button>
+				<div>
+					<button v-on='click: shiftLeft'>←</button>
+					<button v-on='click: shiftRight'>→</button>
+				</div>
+				<button v-on='click: shiftDown'>↓</button>
+			</div>
+		</div>
+	</script>
+
+	<script type="text/javascript" src="script/kotoawase.js"></script>
 
 </body>
 </html>
