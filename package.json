@@ -1,0 +1,24 @@
+{
+  "name": "kotoawase",
+  "version": "0.0.1",
+  "description": "browser game, make specified word with cards on the table",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ichiko/kotoawase.git"
+  },
+  "author": "ichiko <ichigo_sky@hotmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ichiko/kotoawase/issues"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-bower-task": "~0.3.4",
+    "grunt-contrib-coffee": "~0.10.1",
+    "grunt-contrib-watch": "~0.5.3"
+  }
+}

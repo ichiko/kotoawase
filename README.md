@@ -5,12 +5,13 @@ make specified word with cards on the table
 
 ## how to play
 
-### setup
+### install and setup
 
 ```
 bundle install
 bower install
 npm install
+grunt install
 ```
 
 ### start server and play
