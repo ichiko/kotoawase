@@ -36,8 +36,8 @@
 			<p>score: {{score}}</p>
 
 			<table border=1>
-				<tr v-repeat="kanaTable.table" data-index='{{$index}}'>
-					<td v-repeat="row">
+				<tr v-repeat="kanaTable.rows" data-index='{{$index}}'>
+					<td v-repeat="cells">
 						<p style="background-color: {{color()}}">{{kana}}</p>
 					</td>
 				</tr>

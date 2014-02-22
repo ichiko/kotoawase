@@ -20,99 +20,90 @@ class KanaCell
 		else
 			return 'non'
 
+class ShiftResult
+	# param moved 移動が発生したか
+	# param birthWordsCount 成立した言葉の数
+	constructor: (@moved, @birthWordsCount) ->
+
 class KanaGroup
-	constructor: ->
-	swap: (a, b) ->
-		tmp = a.kana
-		a.kana = b.kana
-		b.kana = tmp
-		tmp = a.completed
-		a.completed = b.completed
-		b.completed = tmp
+	constructor: (@size) ->
+
+	push: (cell) ->
+		@cells or= []
+		if (@cells.length < @size)
+			@cells.push cell
+
+	# 前方へつめる
+	shiftForward: ->
+		moved = false
+		wordCount = 0
+		for i in [0...@size - 1]
+			if (@cells[i].isEmpty())
+				tmp = @cells[i].kana
+				@swap(@cells[i], @cells[i+1])
+				moved = true
+			else
+				result = @comparator.compare(@cells[i].kana, @cells[i+1].kana)
+				if (result)
+					@cells[i].kana = result
+					@cells[i].complete()
+					@cells[i+1].kana = Kana_Empty
+					moved = true
+					wordCount++
+		return new ShiftResult(moved, wordCount)
+
+	# 後方へつめる
+	shiftBack: ->
+		moved = false
+		wordCount = 0
+		for i in [1...@size]
+			j = @size - i
+			if (@cells[j].isEmpty())
+				tmp = @cells[j].kana
+				@swap(@cells[j], @cells[j-1])
+				moved = true
+			else
+				result = @comparator.compare(@cells[j].kana, @cells[j-1].kana)
+				if (result)
+					@cells[j].kana = result
+					@cells[j].complete()
+					@cells[j-1].kana = Kana_Empty
+					moved = true
+					wordCount++
+		return new ShiftResult(moved, wordCount)
+
+	swap: (cell_a, cell_b) ->
+		tmp = cell_a.kana
+		cell_a.kana = cell_b.kana
+		cell_b.kana = tmp
+		tmp = cell_a.completed
+		cell_a.completed = cell_b.completed
+		cell_b.completed = tmp
 
 class KanaRow extends KanaGroup
 	constructor: (@size, @comparator) ->
-		super
-	push: (cell) ->
-		@row or= []
-		if (@row.length < @size)
-			@row.push cell
+		super @size
 
 	shiftLeft: ->
-		count = 0
-		for i in [0...@size - 1]
-			if (@row[i].isEmpty())
-				tmp = @row[i].kana
-				@swap(@row[i], @row[i+1])
-			else
-				result = @comparator.compare(@row[i].kana, @row[i+1].kana)
-				if (result)
-					@row[i].kana = result
-					@row[i].complete()
-					@row[i+1].kana = Kana_Empty
-					count++
-		return count
+		return @shiftForward()
 
 	shiftRight: ->
-		count = 0
-		for i in [1...@size]
-			j = @size - i
-			if (@row[j].isEmpty())
-				tmp = @row[j].kana
-				@swap(@row[j], @row[j-1])
-			else
-				result = @comparator.compare(@row[j].kana, @row[j-1].kana)
-				if (result)
-					@row[j].kana = result
-					@row[j].complete()
-					@row[j-1].kana = Kana_Empty
-					count++
-		return count
+		return @shiftBack()
 
 class KanaColumn extends KanaGroup
 	constructor: (@size, @comparator) ->
-		super
-	push: (cell) ->
-		@col or= []
-		if (@col.length < @size)
-			@col.push cell
+		super @size
 
 	shiftUp: ->
-		count = 0
-		for i in [0...@size - 1]
-			if (@col[i].isEmpty())
-				tmp = @col[i].kana
-				@swap(@col[i], @col[i+1])
-			else
-				result = @comparator.compare(@col[i].kana, @col[i+1].kana)
-				if (result)
-					@col[i].kana = result
-					@col[i].complete()
-					@col[i+1].kana = Kana_Empty
-					count++
-		return count
+		return @shiftForward()
 
 	shiftDown: ->
-		count = 0
-		for i in [1...@size]
-			j = @size - i
-			if (@col[j].isEmpty())
-				tmp = @col[j].kana
-				@swap(@col[j], @col[j-1])
-			else
-				result = @comparator.compare(@col[j].kana, @col[j-1].kana)
-				if (result)
-					@col[j].kana = result
-					@col[j].complete()
-					@col[j-1].kana = Kana_Empty
-					count++
-		return count
+		return @shiftBack()
 
 class KanaTable
 	# @param size size of table
 	# @param kana array of Hiragana
 	constructor: (@size, @kana, @comparator) ->
-		@table = []
 		@rows = []
 		@cols = []
 
@@ -125,7 +116,6 @@ class KanaTable
 				cell =  new KanaCell(j, i, Kana_Empty)
 				row.push cell
 				@cols[j].push cell
-			@table.push row
 			@rows.push row
 		@initialize()
 
@@ -142,7 +132,7 @@ class KanaTable
 			index = Math.floor(Math.random() * @size * @size)
 			x = index % @size
 			y = (index - x) / @size
-			cell = @table[y].row[x]
+			cell = @rows[y].cells[x]
 			if (cell.isEmpty())
 				cell.kana = @getRandomKana()
 				count++
@@ -153,31 +143,31 @@ class KanaTable
 
 	shiftLeft: ->
 		for row in @rows
-			count = row.shiftLeft()
-			if count > 0
+			result = row.shiftLeft()
+			if result.birthWordsCount > 0
 				@completeWord = true
-				@score += count
+				@score += result.birthWordsCount
 
 	shiftRight: ->
 		for row in @rows
-			count = row.shiftRight()
-			if count > 0
+			result = row.shiftRight()
+			if result.birthWordsCount > 0
 				@completeWord = true
-				@score += count
+				@score += result.birthWordsCount
 
 	shiftUp: ->
 		for col in @cols
-			count = col.shiftUp()
-			if count > 0
+			result = col.shiftUp()
+			if result.birthWordsCount > 0
 				@completeWord = true
-				@score += count
+				@score += result.birthWordsCount
 
 	shiftDown: ->
 		for col in @cols
-			count = col.shiftDown()
-			if count > 0
+			result = col.shiftDown()
+			if result.birthWordsCount > 0
 				@completeWord = true
-				@score += count
+				@score += result.birthWordsCount
 
 class KanaComparator
 	constructor: (@kana_a, @kana_b, @result) ->
