@@ -39,9 +39,12 @@ class KanaGroup
 		wordCount = 0
 		for i in [0...@size - 1]
 			if (@cells[i].isEmpty())
-				tmp = @cells[i].kana
-				@swap(@cells[i], @cells[i+1])
-				moved = true
+				if (! @cells[i+1].isEmpty())
+					tmp = @cells[i].kana
+					@swap(@cells[i], @cells[i+1])
+					moved = true
+				# else
+				#	moved = false
 			else
 				result = @comparator.compare(@cells[i].kana, @cells[i+1].kana)
 				if (result)
@@ -59,9 +62,12 @@ class KanaGroup
 		for i in [1...@size]
 			j = @size - i
 			if (@cells[j].isEmpty())
-				tmp = @cells[j].kana
-				@swap(@cells[j], @cells[j-1])
-				moved = true
+				if (! @cells[j-1].isEmpty())
+					tmp = @cells[j].kana
+					@swap(@cells[j], @cells[j-1])
+					moved = true
+				# else
+				#	moved = false
 			else
 				result = @comparator.compare(@cells[j].kana, @cells[j-1].kana)
 				if (result)
@@ -71,6 +77,12 @@ class KanaGroup
 					moved = true
 					wordCount++
 		return new ShiftResult(moved, wordCount)
+
+	setHeadCell: (kana) ->
+		@cells[0].kana = kana
+
+	setTailCell: (kana) ->
+		@cells[@size-1].kana = kana
 
 	swap: (cell_a, cell_b) ->
 		tmp = cell_a.kana
@@ -90,6 +102,12 @@ class KanaRow extends KanaGroup
 	shiftRight: ->
 		return @shiftBack()
 
+	addLeftside: (kana) ->
+		@setHeadCell(kana)
+
+	addRightside: (kana) ->
+		@setTailCell(kana)
+
 class KanaColumn extends KanaGroup
 	constructor: (@size, @comparator) ->
 		super @size
@@ -99,6 +117,12 @@ class KanaColumn extends KanaGroup
 
 	shiftDown: ->
 		return @shiftBack()
+
+	addUpside: (kana) ->
+		@setHeadCell(kana)
+
+	addDownside: (kana) ->
+		@setTailCell(kana)
 
 class KanaTable
 	# @param size size of table
@@ -142,32 +166,60 @@ class KanaTable
 		return @kana[Math.floor(Math.random() * @kana.length)]
 
 	shiftLeft: ->
-		for row in @rows
+		movedRows = []
+		for i in [0...@rows.length]
+			row = @rows[i]
 			result = row.shiftLeft()
+			if result.moved
+				movedRows.push(i)
 			if result.birthWordsCount > 0
 				@completeWord = true
 				@score += result.birthWordsCount
+		if (movedRows.length > 0)
+			addIndex = movedRows[Math.floor(Math.random() * movedRows.length)]
+			@rows[addIndex].addRightside(@getRandomKana())
 
 	shiftRight: ->
-		for row in @rows
+		movedRows = []
+		for i in [0...@rows.length]
+			row = @rows[i]
 			result = row.shiftRight()
+			if result.moved
+				movedRows.push(i)
 			if result.birthWordsCount > 0
 				@completeWord = true
 				@score += result.birthWordsCount
+		if (movedRows.length > 0)
+			addIndex = movedRows[Math.floor(Math.random() * movedRows.length)]
+			@rows[addIndex].addLeftside(@getRandomKana())
 
 	shiftUp: ->
-		for col in @cols
+		movedCols = []
+		for i in [0...@cols.length]
+			col = @cols[i]
 			result = col.shiftUp()
+			if result.moved
+				movedCols.push(i)
 			if result.birthWordsCount > 0
 				@completeWord = true
 				@score += result.birthWordsCount
+		if (movedCols.length > 0)
+			addIndex = movedCols[Math.floor(Math.random() * movedCols.length)]
+			@cols[addIndex].addDownside(@getRandomKana())
 
 	shiftDown: ->
-		for col in @cols
+		movedCols = []
+		for i in [0...@cols.length]
+			col = @cols[i]
 			result = col.shiftDown()
+			if result.moved
+				movedCols.push(i)
 			if result.birthWordsCount > 0
 				@completeWord = true
 				@score += result.birthWordsCount
+		if (movedCols.length > 0)
+			addIndex = movedCols[Math.floor(Math.random() * movedCols.length)]
+			@cols[addIndex].addUpside(@getRandomKana())
 
 class KanaComparator
 	constructor: (@kana_a, @kana_b, @result) ->
