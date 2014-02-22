@@ -1,0 +1,4 @@
+.bundle/
+bower_components/
+node_modules/
+vendor/
