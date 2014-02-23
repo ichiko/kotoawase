@@ -1,7 +1,12 @@
+fs = require('fs')
+template = fs.readFileSync(__dirname + '/../templates/kanaTable.html')
+
 KanaTable = require('./kana.coffee')
 {KanaComparator, ComparatorList} = require('./compalator.coffee')
 
 Vue::attach = (selector) -> $(selector).append @$el
+
+Message_Empty = '　'
 
 $ ->
 	compList = new ComparatorList()
@@ -9,48 +14,45 @@ $ ->
 	compList.push new KanaComparator('し', 'ま', '島')
 
 	content = new Vue
-		template: '#kotoawase-table'
+		template: template
 		data:
 			kanaTable: new KanaTable(4, ['に', 'じ', 'か', 'し', 'ま'], compList)
 			score: 0
+			tick: 0
 			words: compList.toString()
 			message: '左右上下に移動して、隣あった文字で下記の言葉を作ってください。'
+			messageState: 'panel-default'
 		methods:
 			shiftUp: ->
-				@$data.message = ''
-				moved = @$data.kanaTable.shiftUp()
-				nextAvailable = @$data.kanaTable.nextStepAvailable()
-				if ! nextAvailable
-					@$data.message = 'ゲームオーバーです。'
-				if (! moved && nextAvailable)
-					@$data.message = 'その方向には移動できません。'
+				@$data.kanaTable.shiftUp()
+				@updateMessage()
 				@$data.score = @$data.kanaTable.score
+				@$data.tick = @$data.kanaTable.tick
 			shiftDown: ->
-				@$data.message = ''
-				moved = @$data.kanaTable.shiftDown()
-				nextAvailable = @$data.kanaTable.nextStepAvailable()
-				if ! nextAvailable
-					@$data.message = 'ゲームオーバーです。'
-				if (! moved && nextAvailable)
-					@$data.message = 'その方向には移動できません。'
+				@$data.kanaTable.shiftDown()
+				@updateMessage()
 				@$data.score = @$data.kanaTable.score
+				@$data.tick = @$data.kanaTable.tick
 			shiftLeft: ->
-				@$data.message = ''
-				moved = @$data.kanaTable.shiftLeft()
-				nextAvailable = @$data.kanaTable.nextStepAvailable()
-				if ! nextAvailable
-					@$data.message = 'ゲームオーバーです。'
-				if (! moved && nextAvailable)
-					@$data.message = 'その方向には移動できません。'
+				@$data.kanaTable.shiftLeft()
+				@updateMessage
 				@$data.score = @$data.kanaTable.score
+				@$data.tick = @$data.kanaTable.tick
 			shiftRight: ->
-				@$data.message = ''
-				moved = @$data.kanaTable.shiftRight()
-				nextAvailable = @$data.kanaTable.nextStepAvailable()
-				if ! nextAvailable
-					@$data.message = 'ゲームオーバーです。'
-				if (! moved && nextAvailable)
-					@$data.message = 'その方向には移動できません。'
+				@$data.kanaTable.shiftRight()
+				@updateMessage()
 				@$data.score = @$data.kanaTable.score
+				@$data.tick = @$data.kanaTable.tick
+			updateMessage: ->
+				switch @$data.kanaTable.state
+					when KanaTable.STATE_MOVED
+						@$data.message = '　'
+						@$data.messageState = "panel-default"
+					when KanaTable.STATE_COULD_NOT_MOVE
+						@$data.message = 'その方向には移動できません。'
+						@$data.messageState = 'panel-primary'
+					when KanaTable.STATE_GAMEOVER
+						@$data.message = 'ゲームオーバーです。'
+						@$data.messageState = 'panel-danger'
 
-	content.attach 'body'
+	content.attach '#stage'

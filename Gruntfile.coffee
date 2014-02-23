@@ -5,8 +5,14 @@ module.exports = (grunt) ->
 			app:
 				files: [
 					'src/coffee/*.coffee'
+					'src/templates/*.html'
 				]
 				tasks: ['browserify:app']
+			css:
+				files: [
+					'src/sass/*.scss'
+				]
+				tasks: ['sass']
 		bower:
 			install:
 				options: 
@@ -24,7 +30,7 @@ module.exports = (grunt) ->
 					]
 				]
 				options:
-					transform: ['coffeeify']
+					transform: ['coffeeify', 'brfs']
 			tutorial:
 				files: [
 					'public/script/tutorial.js' : [
@@ -33,6 +39,13 @@ module.exports = (grunt) ->
 				]
 				options:
 					transform: ['coffeeify']
+		sass:
+			dist:
+				expand: true
+				cwd:  'src/sass/'
+				src:  ['*.scss']
+				dest: 'public/stylesheets'
+				ext:  '.css'
 		uglify:
 			options:
 				mangle:
@@ -48,6 +61,7 @@ module.exports = (grunt) ->
 
 	grunt.loadNpmTasks 'grunt-bower-task'
 	grunt.loadNpmTasks 'grunt-browserify'
+	grunt.loadNpmTasks 'grunt-contrib-sass'
 	grunt.loadNpmTasks 'grunt-contrib-uglify'
 	grunt.loadNpmTasks 'grunt-contrib-watch'
 	grunt.registerTask 'default', ['watch']

@@ -1,0 +1,48 @@
+<div align="center">
+
+<div class="panel {{messageState}}">
+	<div class="panel-heading">
+		{{message}}
+	</div>
+	<div class="panel-body">
+		つくる言葉: {{words}}
+	</div>
+</div>
+
+<table class="kana-table" style="border: 0px;">
+	<tr v-repeat="kanaTable.rows" data-index='{{$index}}'>
+		<td v-repeat="cells">
+			<p class="btn btn-default" style="background-color: {{color()}}">{{kana}}</p>
+		</td>
+	</tr>
+</table>
+
+<p><strong>score: {{score}} / {{tick}} 手</strong></p>
+
+<table class="command-table" style="border: 0;">
+	<tr>
+		<td></td>
+		<td>
+			<button type="button" class="btn btn-default command" v-on='click: shiftUp'>↑</button>
+		</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>
+			<button type="button" class="btn btn-default command" v-on='click: shiftLeft'>←</button>
+		</td>
+		<td></td>
+		<td>
+			<button type="button" class="btn btn-default command" v-on='click: shiftRight'>→</button>
+		</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>
+			<button type="button" class="btn btn-default command" v-on='click: shiftDown'>↓</button>
+		</td>
+		<td></td>
+	</tr>
+</table>
+
+</div>

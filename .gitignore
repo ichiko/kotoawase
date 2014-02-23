@@ -1,7 +1,9 @@
 .bundle/
+.sass-cache/
 bower_components/
 node_modules/
 vendor/
 public/lib/
 public/script/
+public/stylesheets/
 src/js

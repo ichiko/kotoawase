@@ -147,7 +147,9 @@ class KanaTable
 
 	initialize: ->
 		@score = 0
+		@tick = 0
 		@completeWord = false
+		@state = KanaTable.STATE_MOVED
 
 		kanaCount = Math.floor(@size * @size / 3)
 		count = 0
@@ -180,11 +182,13 @@ class KanaTable
 			if result.birthWordsCount > 0
 				@completeWord = true
 				@score += result.birthWordsCount
+		@updateState(movedRows.length > 0)
 		if (movedRows.length == 0)
 			return false
 		else
 			addIndex = movedRows[Math.floor(Math.random() * movedRows.length)]
 			@rows[addIndex].addRightside(@getRandomKana())
+			@tick++
 			return true
 
 	shiftRight: ->
@@ -198,11 +202,13 @@ class KanaTable
 			if result.birthWordsCount > 0
 				@completeWord = true
 				@score += result.birthWordsCount
+		@updateState(movedRows.length > 0)
 		if (movedRows.length == 0)
 			return false
 		else
 			addIndex = movedRows[Math.floor(Math.random() * movedRows.length)]
 			@rows[addIndex].addLeftside(@getRandomKana())
+			@tick++
 			return true
 
 	shiftUp: ->
@@ -216,11 +222,13 @@ class KanaTable
 			if result.birthWordsCount > 0
 				@completeWord = true
 				@score += result.birthWordsCount
+		@updateState(movedCols.length > 0)
 		if (movedCols.length == 0)
 			return false
 		else
 			addIndex = movedCols[Math.floor(Math.random() * movedCols.length)]
 			@cols[addIndex].addDownside(@getRandomKana())
+			@tick++
 			return true
 
 	shiftDown: ->
@@ -234,11 +242,13 @@ class KanaTable
 			if result.birthWordsCount > 0
 				@completeWord = true
 				@score += result.birthWordsCount
+		@updateState(movedCols.length > 0)
 		if (movedCols.length == 0)
 			return false
 		else
 			addIndex = movedCols[Math.floor(Math.random() * movedCols.length)]
 			@cols[addIndex].addUpside(@getRandomKana())
+			@tick++
 			return true
 
 	nextStepAvailable: ->
@@ -258,6 +268,14 @@ class KanaTable
 						return true
 		return false
 
+	updateState: (moved) ->
+		nextAvailable = @nextStepAvailable()
+		@state = KanaTable.STATE_MOVED
+		if ! nextAvailable
+			@state = KanaTable.STATE_GAMEOVER
+		if (! moved && nextAvailable)
+			@state = KanaTable.STATE_COULD_NOT_MOVE
+
 	dropWordCell: ->
 		if @completeWord
 			for row in @rows
@@ -265,5 +283,9 @@ class KanaTable
 					if cell.isCompleted()
 						cell.clear()
 			@completeWord = false
+
+KanaTable.STATE_MOVED = 'STATE_MOVED'
+KanaTable.STATE_COULD_NOT_MOVE = 'STATE_COULD_NOT_MOVE'
+KanaTable.STATE_GAMEOVER = 'STATE_GAMEOVER'
 
 module.exports = KanaTable
