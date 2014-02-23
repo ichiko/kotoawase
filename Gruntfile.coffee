@@ -6,7 +6,7 @@ module.exports = (grunt) ->
 				files: [
 					'src/coffee/*.coffee'
 				]
-				tasks: ['coffee']
+				tasks: ['build']
 		bower:
 			install:
 				options: 
@@ -19,7 +19,7 @@ module.exports = (grunt) ->
 		browserify:
 			app:
 				files: [
-					'public/script/main.js' : [
+					'src/js/main.js' : [
 						'src/coffee/kotoawase.coffee'
 					]
 				]
@@ -33,10 +33,31 @@ module.exports = (grunt) ->
 				]
 				options:
 					transform: ['coffeeify']
+		uglify:
+			options:
+				mangle:
+					except: ['Vue']
+			app:
+				files: [
+					'public/script/main.min.js' : [
+						'src/js/main.js'
+					]
+				]
+				options:
+					sourceMap: true
+			release:
+				files: [
+					'public/script/main.min.js' : [
+						'src/js/main.js'
+					]
+				]
 
 	grunt.loadNpmTasks 'grunt-bower-task'
-	grunt.loadNpmTasks 'grunt-contrib-watch'
 	grunt.loadNpmTasks 'grunt-browserify'
+	grunt.loadNpmTasks 'grunt-contrib-uglify'
+	grunt.loadNpmTasks 'grunt-contrib-watch'
 	grunt.registerTask 'default', ['watch']
 	grunt.registerTask 'install', ['bower']
+	grunt.registerTask 'build', ['browserify:app', 'uglify:app']
+	grunt.registerTask 'release', ['browserify:app', 'uglify:release']
 	return
