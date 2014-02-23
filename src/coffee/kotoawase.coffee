@@ -14,18 +14,43 @@ $ ->
 			kanaTable: new KanaTable(4, ['に', 'じ', 'か', 'し', 'ま'], compList)
 			score: 0
 			words: compList.toString()
+			message: '左右上下に移動して、隣あった文字で下記の言葉を作ってください。'
 		methods:
 			shiftUp: ->
-				@$data.kanaTable.shiftUp()
+				@$data.message = ''
+				moved = @$data.kanaTable.shiftUp()
+				nextAvailable = @$data.kanaTable.nextStepAvailable()
+				if ! nextAvailable
+					@$data.message = 'ゲームオーバーです。'
+				if (! moved && nextAvailable)
+					@$data.message = 'その方向には移動できません。'
 				@$data.score = @$data.kanaTable.score
 			shiftDown: ->
-				@$data.kanaTable.shiftDown()
+				@$data.message = ''
+				moved = @$data.kanaTable.shiftDown()
+				nextAvailable = @$data.kanaTable.nextStepAvailable()
+				if ! nextAvailable
+					@$data.message = 'ゲームオーバーです。'
+				if (! moved && nextAvailable)
+					@$data.message = 'その方向には移動できません。'
 				@$data.score = @$data.kanaTable.score
 			shiftLeft: ->
-				@$data.kanaTable.shiftLeft()
+				@$data.message = ''
+				moved = @$data.kanaTable.shiftLeft()
+				nextAvailable = @$data.kanaTable.nextStepAvailable()
+				if ! nextAvailable
+					@$data.message = 'ゲームオーバーです。'
+				if (! moved && nextAvailable)
+					@$data.message = 'その方向には移動できません。'
 				@$data.score = @$data.kanaTable.score
 			shiftRight: ->
-				@$data.kanaTable.shiftRight()
+				@$data.message = ''
+				moved = @$data.kanaTable.shiftRight()
+				nextAvailable = @$data.kanaTable.nextStepAvailable()
+				if ! nextAvailable
+					@$data.message = 'ゲームオーバーです。'
+				if (! moved && nextAvailable)
+					@$data.message = 'その方向には移動できません。'
 				@$data.score = @$data.kanaTable.score
 
 	content.attach 'body'

@@ -167,7 +167,10 @@ class KanaTable
 	getRandomKana: ->
 		return @kana[Math.floor(Math.random() * @kana.length)]
 
+	# shiftLeft/shiftRight/shiftUp/shiftDown
+	# @return true/false 移動が発生したか
 	shiftLeft: ->
+		@dropWordCell()
 		movedRows = []
 		for i in [0...@rows.length]
 			row = @rows[i]
@@ -177,11 +180,15 @@ class KanaTable
 			if result.birthWordsCount > 0
 				@completeWord = true
 				@score += result.birthWordsCount
-		if (movedRows.length > 0)
+		if (movedRows.length == 0)
+			return false
+		else
 			addIndex = movedRows[Math.floor(Math.random() * movedRows.length)]
 			@rows[addIndex].addRightside(@getRandomKana())
+			return true
 
 	shiftRight: ->
+		@dropWordCell()
 		movedRows = []
 		for i in [0...@rows.length]
 			row = @rows[i]
@@ -191,11 +198,15 @@ class KanaTable
 			if result.birthWordsCount > 0
 				@completeWord = true
 				@score += result.birthWordsCount
-		if (movedRows.length > 0)
+		if (movedRows.length == 0)
+			return false
+		else
 			addIndex = movedRows[Math.floor(Math.random() * movedRows.length)]
 			@rows[addIndex].addLeftside(@getRandomKana())
+			return true
 
 	shiftUp: ->
+		@dropWordCell()
 		movedCols = []
 		for i in [0...@cols.length]
 			col = @cols[i]
@@ -205,11 +216,15 @@ class KanaTable
 			if result.birthWordsCount > 0
 				@completeWord = true
 				@score += result.birthWordsCount
-		if (movedCols.length > 0)
+		if (movedCols.length == 0)
+			return false
+		else
 			addIndex = movedCols[Math.floor(Math.random() * movedCols.length)]
 			@cols[addIndex].addDownside(@getRandomKana())
+			return true
 
 	shiftDown: ->
+		@dropWordCell()
 		movedCols = []
 		for i in [0...@cols.length]
 			col = @cols[i]
@@ -219,8 +234,36 @@ class KanaTable
 			if result.birthWordsCount > 0
 				@completeWord = true
 				@score += result.birthWordsCount
-		if (movedCols.length > 0)
+		if (movedCols.length == 0)
+			return false
+		else
 			addIndex = movedCols[Math.floor(Math.random() * movedCols.length)]
 			@cols[addIndex].addUpside(@getRandomKana())
+			return true
+
+	nextStepAvailable: ->
+		# (1) 単語ができている
+		if @completeWord
+			return true
+		# (2) 空セルがある
+		# (3) 単語になる組み合わせがある
+		for row in @rows
+			for i in [0...row.cells.length]
+				cell = row.cells[i]
+				if cell.isEmpty()
+					return true
+				else if i < row.cells.length - 1
+					cell_b = row.cells[i+1]
+					if @comparator.compare(cell.kana, cell_b.kana)
+						return true
+		return false
+
+	dropWordCell: ->
+		if @completeWord
+			for row in @rows
+				for cell in row.cells
+					if cell.isCompleted()
+						cell.clear()
+			@completeWord = false
 
 module.exports = KanaTable
