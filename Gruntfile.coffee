@@ -16,25 +16,27 @@ module.exports = (grunt) ->
 					verbose: false
 					cleanTargetDir: true
 					cleanBowerDir: false
-		coffee:
+		browserify:
 			app:
+				files: [
+					'public/script/main.js' : [
+						'src/coffee/kotoawase.coffee'
+					]
+				]
 				options:
-					join: true
+					transform: ['coffeeify']
+			tutorial:
 				files: [
-					'public/script/main.js': ['src/coffee/kana.coffee', 'src/coffee/kotoawase.coffee']
+					'public/script/tutorial.js' : [
+						'src/coffee/tutorial.coffee'
+					]
 				]
-			all:
-				files: [
-					expand: true
-					cwd: 'src/coffee'
-					src: ['**/*.coffee']
-					dest: 'public/script'
-					ext: '.js'
-				]
+				options:
+					transform: ['coffeeify']
 
 	grunt.loadNpmTasks 'grunt-bower-task'
-	grunt.loadNpmTasks 'grunt-contrib-coffee'
 	grunt.loadNpmTasks 'grunt-contrib-watch'
+	grunt.loadNpmTasks 'grunt-browserify'
 	grunt.registerTask 'default', ['watch']
 	grunt.registerTask 'install', ['bower']
 	return

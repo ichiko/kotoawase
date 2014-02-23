@@ -1,3 +1,6 @@
+KanaTable = require('./kana.coffee')
+{KanaComparator, ComparatorList} = require('./compalator.coffee')
+
 Vue::attach = (selector) -> $(selector).append @$el
 
 $ ->
