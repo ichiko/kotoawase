@@ -8,27 +8,6 @@
 	<script type="text/javascript" src="lib/vue/vue.js"></script>
 </head>
 <body>
-	
-	<script type="text/template" id="simple_template">
-		<h1>Hello, {{message}}</h1>
-
-		<p class="{{message}}">color</p>
-		<input v-model="color"></input>
-
-		<div class="counter" style="color: {{color}};">
-		  <p> counter: {{counter}} </p>
-		</div>
-
-		<button v-on='click: addTweet'>add tweet</button>
-		<ul class="tweets">
-		  <li v-repeat="tweets" v-on='click: erase(this)' data-index='{{$index}}'>
-		    {{name}}:{{$index}}:{{content}}
-		  </li>
-		</ul>
-	</script>
-
-	<!--<script type="text/javascript" src="script/tutorial.js"></script> -->
-
 	<script type="text/template" id="kotoawase-table">
 		<div align='center'>
 			<h1>ことあわせ</h1>
