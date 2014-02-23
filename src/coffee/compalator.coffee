@@ -3,6 +3,8 @@
 
 class KanaComparator
 	constructor: (@kana_a, @kana_b, @result) ->
+	toString: ->
+		return @result + '(' + @kana_a + @kana_b + ')'
 
 class ComparatorList
 	constructor: ->
@@ -19,7 +21,7 @@ class ComparatorList
 		for cmp in @list
 			if str.length != 0
 				str += ', '
-			str += cmp.result
+			str += cmp.toString()
 		return str
 
 exports.KanaComparator = KanaComparator
