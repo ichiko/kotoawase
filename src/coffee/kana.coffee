@@ -5,35 +5,42 @@ Kana_Empty = '　'
 LOOP_MAX = 50
 
 class KanaInfo
-	constructor: (@kana, @color) ->
+	constructor: (@kana, @styleClass) ->
 
-KanaInfo_Empty = new KanaInfo(Kana_Empty, 'white')
+	@createAsDefault: ->
+		return new KanaInfo(KanaInfo.DefaultKana, KanaInfo.DefaultStyleClass)
+
+KanaInfo.DefaultKana = Kana_Empty
+KanaInfo.DefaultStyleClass = 'kana-neutral'
 
 class KanaCell
 	constructor: (@x, @y, kanaInfo) ->
 		@kana = kanaInfo.kana
-		@color = kanaInfo.color
-		@completed = false
+		@style = kanaInfo.styleClass
+		@combined = false
+		@united = false
 	isEmpty: ->
 		return (@kana == Kana_Empty)
-	complete: ->
-		@completed = true
-	isCompleted: ->
-		return @completed
+	combine: ->
+		@combined = true
+	isCombined: ->
+		return @combined
+	unite: ->
+		@united = true
+	isUnited: ->
+		return @united
+	setKanaInfo: (kanaInfo) ->
+		@kana = kanaInfo.kana
+		@style = kanaInfo.styleClass
+	setNeutral: ->
+		@combined = false
+		@united = false
 	clear: ->
-		@completed = false
-		@kana = KanaInfo_Empty.kana
-		@color = KanaInfo_Empty.color
-	backgroundColor: ->
-		if @completed
-			return 'orange'
-		else
-			return 'white'
-	borderColor: ->
-		if @completed
-			return 'orange'
-		else
-			return @color
+		@combined = false
+		@united = false
+		@kana = KanaInfo.DefaultKana
+		@style = KanaInfo.DefaultStyleClass
+
 class ShiftResult
 	# param moved 移動が発生したか
 	# param birthWordsCount 成立した言葉の数
@@ -61,10 +68,15 @@ class KanaGroup
 			else
 				result = @comparator.compare(@cells[i].kana, @cells[i+1].kana)
 				if (result)
-					@cells[i].clear()
-					@cells[i+1].clear()
-					@cells[i].kana = result
-					@cells[i].complete()
+					if (result.isNewWord())
+						@cells[i].clear()
+						@cells[i+1].clear()
+						@cells[i].kana = result.kana
+						@cells[i].combine()
+					else if (result.isUnitedKana())
+						@cells[i+1].clear()
+						@cells[i].kana = result.kana
+						@cells[i].unite()
 					moved = true
 					wordCount++
 		return new ShiftResult(moved, wordCount)
@@ -84,21 +96,24 @@ class KanaGroup
 			else
 				result = @comparator.compare(@cells[j].kana, @cells[j-1].kana)
 				if (result)
-					@cells[j].clear()
-					@cells[j-1].clear()
-					@cells[j].kana = result
-					@cells[j].complete()
+					if (result.isNewWord())
+						@cells[j].clear()
+						@cells[j-1].clear()
+						@cells[j].kana = result.kana
+						@cells[j].combine()
+					else if (result.isUnitedKana())
+						@cells[j-1].clear()
+						@cells[j].kana = result.kana
+						@cells[j].unite()
 					moved = true
 					wordCount++
 		return new ShiftResult(moved, wordCount)
 
 	setHeadCell: (kanaInfo) ->
-		@cells[0].kana = kanaInfo.kana
-		@cells[0].color = kanaInfo.color
+		@cells[0].setKanaInfo(kanaInfo)
 
 	setTailCell: (kanaInfo) ->
-		@cells[@size-1].kana = kanaInfo.kana
-		@cells[@size-1].color = kanaInfo.color
+		@cells[@size-1].setKanaInfo(kanaInfo)
 
 	swap: (cell_a, cell_b) ->
 		tmp = cell_a.kana
@@ -107,9 +122,9 @@ class KanaGroup
 		tmp = cell_a.completed
 		cell_a.completed = cell_b.completed
 		cell_b.completed = tmp
-		tmp = cell_a.color
-		cell_a.color = cell_b.color
-		cell_b.color = tmp
+		tmp = cell_a.style
+		cell_a.style = cell_b.style
+		cell_b.style = tmp
 
 	# 手詰まりか
 	# いずれの条件も満さない場合に真
@@ -170,7 +185,7 @@ class KanaTable
 		for i in [0...@size]
 			row = new KanaRow(@size, @comparator)
 			for j in [0...@size]
-				cell =  new KanaCell(j, i, KanaInfo_Empty)
+				cell =  new KanaCell(j, i, KanaInfo.createAsDefault())
 				row.push cell
 				@cols[j].push cell
 			@rows.push row
@@ -193,9 +208,7 @@ class KanaTable
 			y = (index - x) / @size
 			cell = @rows[y].cells[x]
 			if (cell.isEmpty())
-				kanaInfo = @getRandomKanaInfo()
-				cell.kana = kanaInfo.kana
-				cell.color = kanaInfo.color
+				cell.setKanaInfo(@getRandomKanaInfo())
 				count++
 			i++
 
@@ -205,7 +218,7 @@ class KanaTable
 	# shiftLeft/shiftRight/shiftUp/shiftDown
 	# @return true/false 移動が発生したか
 	shiftLeft: ->
-		@dropWordCell()
+		@resetCells()
 		movedRows = []
 		for i in [0...@rows.length]
 			row = @rows[i]
@@ -224,7 +237,7 @@ class KanaTable
 
 
 	shiftRight: ->
-		@dropWordCell()
+		@resetCells()
 		movedRows = []
 		for i in [0...@rows.length]
 			row = @rows[i]
@@ -242,7 +255,7 @@ class KanaTable
 		return (movedRows.length > 0)
 
 	shiftUp: ->
-		@dropWordCell()
+		@resetCells()
 		movedCols = []
 		for i in [0...@cols.length]
 			col = @cols[i]
@@ -260,7 +273,7 @@ class KanaTable
 		return (movedCols.length > 0)
 
 	shiftDown: ->
-		@dropWordCell()
+		@resetCells()
 		movedCols = []
 		for i in [0...@cols.length]
 			col = @cols[i]
@@ -299,12 +312,14 @@ class KanaTable
 		if ((! moved) && nextAvailable)
 			@state = KanaTable.STATE_COULD_NOT_MOVE
 
-	dropWordCell: ->
+	resetCells: ->
 		if @completeWord
 			for row in @rows
 				for cell in row.cells
-					if cell.isCompleted()
+					if cell.isCombined()
 						cell.clear()
+					if cell.isUnited()
+						cell.setNeutral()
 			@completeWord = false
 
 KanaTable.STATE_MOVED = 'STATE_MOVED'

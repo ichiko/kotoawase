@@ -1,11 +1,50 @@
+$COLOR_COMBINED: orange;
+$COLOR_UNTIED_BACKGROUND: #d3d3d3;
+
 .kana-table {
 	margin: 20 auto 20 auto;
 	border: 0px;
 }
 
-.kana-card {
+.cell-combined {
+	background-color: $COLOR_COMBINED;
+}
+
+.cell-united {
+	background-color: $COLOR_UNTIED_BACKGROUND;
+}
+
+.kana-common {
 	border-bottom-style: solid;
 	border-bottom-width: 5px;
+}
+
+.kana-neutral {
+	border-color: white;
+}
+
+.kana-combined {
+	border-color: $COLOR_COMBINED;
+}
+
+.kana1 {
+	border-color: #f0e68c;
+}
+
+.kana2 {
+	border-color: #87cefa;
+}
+
+.kana3 {
+	border-color: #9acd32;
+}
+
+.kana4 {
+	border-color: #ffe4e1;
+}
+
+.kana5 {
+	border-color: #b0c4de;
 }
 
 .command-table {

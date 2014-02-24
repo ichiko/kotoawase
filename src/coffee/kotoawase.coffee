@@ -2,7 +2,7 @@ fs = require('fs')
 template = fs.readFileSync(__dirname + '/../templates/kanaTable.html')
 
 {KanaInfo, KanaTable} = require('./kana.coffee')
-{KanaComparator, ComparatorList} = require('./compalator.coffee')
+KanaComparationRuleList = require('./compalator.coffee')
 
 KEYCODE_LEFT = 37
 KEYCODE_UP = 38
@@ -11,25 +11,39 @@ KEYCODE_DOWN = 40
 
 Vue::attach = (selector) -> $(selector).append @$el
 
+formatRuleList = (ruleList) ->
+	str = ''
+	for cmp in ruleList.list
+		if cmp.isCombineRule()
+			if str.length != 0
+				str += ', '
+			str += cmp.toString()
+	return str
+
 $ ->
 	kanaInfoList = []
-	kanaInfoList.push new KanaInfo('に', '#f0e68c')
-	kanaInfoList.push new KanaInfo('じ', '#87cefa')
-	kanaInfoList.push new KanaInfo('か', '#9acd32')
-	kanaInfoList.push new KanaInfo('し', '#ffe4e1')
-	kanaInfoList.push new KanaInfo('ま', '#b0c4de')
+	kanaInfoList.push new KanaInfo('に', 'kana1')
+	kanaInfoList.push new KanaInfo('じ', 'kana2')
+	kanaInfoList.push new KanaInfo('か', 'kana3')
+	kanaInfoList.push new KanaInfo('し', 'kana4')
+	kanaInfoList.push new KanaInfo('ま', 'kana5')
 
-	compList = new ComparatorList()
-	compList.push new KanaComparator('に', 'じ', '虹')
-	compList.push new KanaComparator('し', 'ま', '島')
+	ruleList = new KanaComparationRuleList()
+	ruleList.addCombineRule('に', 'じ', '虹')
+	ruleList.addCombineRule('し', 'ま', '島')
+	ruleList.addUnionRule('に')
+	ruleList.addUnionRule('じ')
+	ruleList.addUnionRule('か')
+	ruleList.addUnionRule('し')
+	ruleList.addUnionRule('ま')
 
 	content = new Vue
 		template: template
 		data:
-			kanaTable: new KanaTable(4, kanaInfoList, compList)
+			kanaTable: new KanaTable(4, kanaInfoList, ruleList)
 			score: 0
 			tick: 0
-			words: compList.toString()
+			words: formatRuleList(ruleList)
 			message: '左右上下に移動して、隣あった文字で下記の言葉を作ってください。'
 			messageState: 'panel-default'
 		methods:
