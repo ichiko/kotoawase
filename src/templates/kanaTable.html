@@ -23,23 +23,27 @@
 	<tr>
 		<td></td>
 		<td>
-			<button type="button" class="btn btn-default command" v-on='click: shiftUp'>↑</button>
+			<button type="button" class="btn btn-default command"
+				v-on='touchstart: shiftUp, click: shiftUp'>↑</button>
 		</td>
 		<td></td>
 	</tr>
 	<tr>
 		<td>
-			<button type="button" class="btn btn-default command" v-on='click: shiftLeft'>←</button>
+			<button type="button" class="btn btn-default command"
+				v-on='touchstart: shiftLeft, click: shiftLeft'>←</button>
 		</td>
 		<td></td>
 		<td>
-			<button type="button" class="btn btn-default command" v-on='click: shiftRight'>→</button>
+			<button type="button" class="btn btn-default command"
+				v-on='touchstart: shiftRight, click: shiftRight'>→</button>
 		</td>
 	</tr>
 	<tr>
 		<td></td>
 		<td>
-			<button type="button" class="btn btn-default command" v-on='click: shiftDown'>↓</button>
+			<button type="button" class="btn btn-default command"
+				v-on='touchstart: shiftDown, click: shiftDown'>↓</button>
 		</td>
 		<td></td>
 	</tr>

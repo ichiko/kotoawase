@@ -26,22 +26,26 @@ $ ->
 			message: '左右上下に移動して、隣あった文字で下記の言葉を作ってください。'
 			messageState: 'panel-default'
 		methods:
-			shiftUp: ->
+			shiftUp: (e) ->
+				e.preventDefault()
 				@$data.kanaTable.shiftUp()
 				@updateMessage()
 				@$data.score = @$data.kanaTable.score
 				@$data.tick = @$data.kanaTable.tick
-			shiftDown: ->
+			shiftDown: (e) ->
+				e.preventDefault()
 				@$data.kanaTable.shiftDown()
 				@updateMessage()
 				@$data.score = @$data.kanaTable.score
 				@$data.tick = @$data.kanaTable.tick
-			shiftLeft: ->
+			shiftLeft: (e) ->
+				e.preventDefault()
 				@$data.kanaTable.shiftLeft()
 				@updateMessage
 				@$data.score = @$data.kanaTable.score
 				@$data.tick = @$data.kanaTable.tick
-			shiftRight: ->
+			shiftRight: (e) ->
+				e.preventDefault()
 				@$data.kanaTable.shiftRight()
 				@updateMessage()
 				@$data.score = @$data.kanaTable.score
