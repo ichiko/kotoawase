@@ -31,11 +31,12 @@ $ ->
 	ruleList = new KanaComparationRuleList()
 	ruleList.addCombineRule('に', 'じ', '虹')
 	ruleList.addCombineRule('し', 'ま', '島')
-	ruleList.addUnionRule('に')
-	ruleList.addUnionRule('じ')
-	ruleList.addUnionRule('か')
-	ruleList.addUnionRule('し')
-	ruleList.addUnionRule('ま')
+	# 同じ文字をひとつにするルール
+	#ruleList.addUnionRule('に')
+	#ruleList.addUnionRule('じ')
+	#ruleList.addUnionRule('か')
+	#ruleList.addUnionRule('し')
+	#ruleList.addUnionRule('ま')
 
 	content = new Vue
 		template: template
