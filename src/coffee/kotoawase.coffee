@@ -4,9 +4,12 @@ template = fs.readFileSync(__dirname + '/../templates/kanaTable.html')
 KanaTable = require('./kana.coffee')
 {KanaComparator, ComparatorList} = require('./compalator.coffee')
 
-Vue::attach = (selector) -> $(selector).append @$el
+KEYCODE_LEFT = 37
+KEYCODE_UP = 38
+KEYCODE_RIGHT = 39
+KEYCODE_DOWN = 40
 
-Message_Empty = '　'
+Vue::attach = (selector) -> $(selector).append @$el
 
 $ ->
 	compList = new ComparatorList()
@@ -56,3 +59,15 @@ $ ->
 						@$data.messageState = 'panel-danger'
 
 	content.attach '#stage'
+
+	$('body').keydown( (e) ->
+		switch e.keyCode
+			when KEYCODE_LEFT
+				content.shiftLeft()
+			when KEYCODE_UP
+				content.shiftUp()
+			when KEYCODE_RIGHT
+				content.shiftRight()
+			when KEYCODE_DOWN
+				content.shiftDown()
+	)
