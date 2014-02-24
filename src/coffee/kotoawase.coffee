@@ -1,7 +1,7 @@
 fs = require('fs')
 template = fs.readFileSync(__dirname + '/../templates/kanaTable.html')
 
-KanaTable = require('./kana.coffee')
+{KanaInfo, KanaTable} = require('./kana.coffee')
 {KanaComparator, ComparatorList} = require('./compalator.coffee')
 
 KEYCODE_LEFT = 37
@@ -12,6 +12,13 @@ KEYCODE_DOWN = 40
 Vue::attach = (selector) -> $(selector).append @$el
 
 $ ->
+	kanaInfoList = []
+	kanaInfoList.push new KanaInfo('に', '#f0e68c')
+	kanaInfoList.push new KanaInfo('じ', '#87cefa')
+	kanaInfoList.push new KanaInfo('か', '#9acd32')
+	kanaInfoList.push new KanaInfo('し', '#ffe4e1')
+	kanaInfoList.push new KanaInfo('ま', '#b0c4de')
+
 	compList = new ComparatorList()
 	compList.push new KanaComparator('に', 'じ', '虹')
 	compList.push new KanaComparator('し', 'ま', '島')
@@ -19,7 +26,7 @@ $ ->
 	content = new Vue
 		template: template
 		data:
-			kanaTable: new KanaTable(4, ['に', 'じ', 'か', 'し', 'ま'], compList)
+			kanaTable: new KanaTable(4, kanaInfoList, compList)
 			score: 0
 			tick: 0
 			words: compList.toString()
@@ -41,7 +48,7 @@ $ ->
 			shiftLeft: (e) ->
 				e.preventDefault()
 				@$data.kanaTable.shiftLeft()
-				@updateMessage
+				@updateMessage()
 				@$data.score = @$data.kanaTable.score
 				@$data.tick = @$data.kanaTable.tick
 			shiftRight: (e) ->

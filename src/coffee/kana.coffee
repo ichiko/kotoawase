@@ -1,11 +1,18 @@
 # usage
-# KanaTable = require('path/to/file')
+# {KanaInfo, KanaTable} = require('path/to/file')
 
 Kana_Empty = '　'
 LOOP_MAX = 50
 
+class KanaInfo
+	constructor: (@kana, @color) ->
+
+KanaInfo_Empty = new KanaInfo(Kana_Empty, 'white')
+
 class KanaCell
-	constructor: (@x, @y, @kana) ->
+	constructor: (@x, @y, kanaInfo) ->
+		@kana = kanaInfo.kana
+		@color = kanaInfo.color
 		@completed = false
 	isEmpty: ->
 		return (@kana == Kana_Empty)
@@ -15,13 +22,18 @@ class KanaCell
 		return @completed
 	clear: ->
 		@completed = false
-		@kana = Kana_Empty
-	color: ->
+		@kana = KanaInfo_Empty.kana
+		@color = KanaInfo_Empty.color
+	backgroundColor: ->
 		if @completed
 			return 'orange'
 		else
-			return 'non'
-
+			return 'white'
+	borderColor: ->
+		if @completed
+			return 'orange'
+		else
+			return @color
 class ShiftResult
 	# param moved 移動が発生したか
 	# param birthWordsCount 成立した言葉の数
@@ -42,7 +54,6 @@ class KanaGroup
 		for i in [0...@size - 1]
 			if (@cells[i].isEmpty())
 				if (! @cells[i+1].isEmpty())
-					tmp = @cells[i].kana
 					@swap(@cells[i], @cells[i+1])
 					moved = true
 				# else
@@ -50,9 +61,10 @@ class KanaGroup
 			else
 				result = @comparator.compare(@cells[i].kana, @cells[i+1].kana)
 				if (result)
+					@cells[i].clear()
+					@cells[i+1].clear()
 					@cells[i].kana = result
 					@cells[i].complete()
-					@cells[i+1].kana = Kana_Empty
 					moved = true
 					wordCount++
 		return new ShiftResult(moved, wordCount)
@@ -65,7 +77,6 @@ class KanaGroup
 			j = @size - i
 			if (@cells[j].isEmpty())
 				if (! @cells[j-1].isEmpty())
-					tmp = @cells[j].kana
 					@swap(@cells[j], @cells[j-1])
 					moved = true
 				# else
@@ -73,18 +84,21 @@ class KanaGroup
 			else
 				result = @comparator.compare(@cells[j].kana, @cells[j-1].kana)
 				if (result)
+					@cells[j].clear()
+					@cells[j-1].clear()
 					@cells[j].kana = result
 					@cells[j].complete()
-					@cells[j-1].kana = Kana_Empty
 					moved = true
 					wordCount++
 		return new ShiftResult(moved, wordCount)
 
-	setHeadCell: (kana) ->
-		@cells[0].kana = kana
+	setHeadCell: (kanaInfo) ->
+		@cells[0].kana = kanaInfo.kana
+		@cells[0].color = kanaInfo.color
 
-	setTailCell: (kana) ->
-		@cells[@size-1].kana = kana
+	setTailCell: (kanaInfo) ->
+		@cells[@size-1].kana = kanaInfo.kana
+		@cells[@size-1].color = kanaInfo.color
 
 	swap: (cell_a, cell_b) ->
 		tmp = cell_a.kana
@@ -93,6 +107,9 @@ class KanaGroup
 		tmp = cell_a.completed
 		cell_a.completed = cell_b.completed
 		cell_b.completed = tmp
+		tmp = cell_a.color
+		cell_a.color = cell_b.color
+		cell_b.color = tmp
 
 	# 手詰まりか
 	# いずれの条件も満さない場合に真
@@ -118,11 +135,11 @@ class KanaRow extends KanaGroup
 	shiftRight: ->
 		return @shiftBack()
 
-	addLeftside: (kana) ->
-		@setHeadCell(kana)
+	addLeftside: (kanaInfo) ->
+		@setHeadCell(kanaInfo)
 
-	addRightside: (kana) ->
-		@setTailCell(kana)
+	addRightside: (kanaInfo) ->
+		@setTailCell(kanaInfo)
 
 class KanaColumn extends KanaGroup
 	constructor: (@size, @comparator) ->
@@ -134,16 +151,16 @@ class KanaColumn extends KanaGroup
 	shiftDown: ->
 		return @shiftBack()
 
-	addUpside: (kana) ->
-		@setHeadCell(kana)
+	addUpside: (kanaInfo) ->
+		@setHeadCell(kanaInfo)
 
-	addDownside: (kana) ->
-		@setTailCell(kana)
+	addDownside: (kanaInfo) ->
+		@setTailCell(kanaInfo)
 
 class KanaTable
 	# @param size size of table
 	# @param kana array of Hiragana
-	constructor: (@size, @kana, @comparator) ->
+	constructor: (@size, @kanaInfoList, @comparator) ->
 		@rows = []
 		@cols = []
 
@@ -153,7 +170,7 @@ class KanaTable
 		for i in [0...@size]
 			row = new KanaRow(@size, @comparator)
 			for j in [0...@size]
-				cell =  new KanaCell(j, i, Kana_Empty)
+				cell =  new KanaCell(j, i, KanaInfo_Empty)
 				row.push cell
 				@cols[j].push cell
 			@rows.push row
@@ -176,12 +193,14 @@ class KanaTable
 			y = (index - x) / @size
 			cell = @rows[y].cells[x]
 			if (cell.isEmpty())
-				cell.kana = @getRandomKana()
+				kanaInfo = @getRandomKanaInfo()
+				cell.kana = kanaInfo.kana
+				cell.color = kanaInfo.color
 				count++
 			i++
 
-	getRandomKana: ->
-		return @kana[Math.floor(Math.random() * @kana.length)]
+	getRandomKanaInfo: ->
+		return @kanaInfoList[Math.floor(Math.random() * @kanaInfoList.length)]
 
 	# shiftLeft/shiftRight/shiftUp/shiftDown
 	# @return true/false 移動が発生したか
@@ -198,7 +217,7 @@ class KanaTable
 				@score += result.birthWordsCount
 		if (movedRows.length > 0)
 			addIndex = movedRows[Math.floor(Math.random() * movedRows.length)]
-			@rows[addIndex].addRightside(@getRandomKana())
+			@rows[addIndex].addRightside(@getRandomKanaInfo())
 			@tick++
 		@updateState(movedRows.length > 0)
 		return (movedRows.length > 0)
@@ -217,7 +236,7 @@ class KanaTable
 				@score += result.birthWordsCount
 		if (movedRows.length > 0)
 			addIndex = movedRows[Math.floor(Math.random() * movedRows.length)]
-			@rows[addIndex].addLeftside(@getRandomKana())
+			@rows[addIndex].addLeftside(@getRandomKanaInfo())
 			@tick++
 		@updateState(movedRows.length > 0)
 		return (movedRows.length > 0)
@@ -235,7 +254,7 @@ class KanaTable
 				@score += result.birthWordsCount
 		if (movedCols.length > 0)
 			addIndex = movedCols[Math.floor(Math.random() * movedCols.length)]
-			@cols[addIndex].addDownside(@getRandomKana())
+			@cols[addIndex].addDownside(@getRandomKanaInfo())
 			@tick++
 		@updateState(movedCols.length > 0)
 		return (movedCols.length > 0)
@@ -253,7 +272,7 @@ class KanaTable
 				@score += result.birthWordsCount
 		if (movedCols.length > 0)
 			addIndex = movedCols[Math.floor(Math.random() * movedCols.length)]
-			@cols[addIndex].addUpside(@getRandomKana())
+			@cols[addIndex].addUpside(@getRandomKanaInfo())
 			@tick++
 		@updateState(movedCols.length > 0)
 		return (movedCols.length > 0)
@@ -277,7 +296,7 @@ class KanaTable
 		@state = KanaTable.STATE_MOVED
 		if ! nextAvailable
 			@state = KanaTable.STATE_GAMEOVER
-		if (! moved && nextAvailable)
+		if ((! moved) && nextAvailable)
 			@state = KanaTable.STATE_COULD_NOT_MOVE
 
 	dropWordCell: ->
@@ -292,4 +311,5 @@ KanaTable.STATE_MOVED = 'STATE_MOVED'
 KanaTable.STATE_COULD_NOT_MOVE = 'STATE_COULD_NOT_MOVE'
 KanaTable.STATE_GAMEOVER = 'STATE_GAMEOVER'
 
-module.exports = KanaTable
+exports.KanaInfo = KanaInfo
+exports.KanaTable = KanaTable
