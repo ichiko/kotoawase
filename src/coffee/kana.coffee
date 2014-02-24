@@ -196,14 +196,13 @@ class KanaTable
 			if result.birthWordsCount > 0
 				@completeWord = true
 				@score += result.birthWordsCount
-		@updateState(movedRows.length > 0)
-		if (movedRows.length == 0)
-			return false
-		else
+		if (movedRows.length > 0)
 			addIndex = movedRows[Math.floor(Math.random() * movedRows.length)]
 			@rows[addIndex].addRightside(@getRandomKana())
 			@tick++
-			return true
+		@updateState(movedRows.length > 0)
+		return (movedRows.length > 0)
+
 
 	shiftRight: ->
 		@dropWordCell()
@@ -216,14 +215,12 @@ class KanaTable
 			if result.birthWordsCount > 0
 				@completeWord = true
 				@score += result.birthWordsCount
-		@updateState(movedRows.length > 0)
-		if (movedRows.length == 0)
-			return false
-		else
+		if (movedRows.length > 0)
 			addIndex = movedRows[Math.floor(Math.random() * movedRows.length)]
 			@rows[addIndex].addLeftside(@getRandomKana())
 			@tick++
-			return true
+		@updateState(movedRows.length > 0)
+		return (movedRows.length > 0)
 
 	shiftUp: ->
 		@dropWordCell()
@@ -236,14 +233,12 @@ class KanaTable
 			if result.birthWordsCount > 0
 				@completeWord = true
 				@score += result.birthWordsCount
-		@updateState(movedCols.length > 0)
-		if (movedCols.length == 0)
-			return false
-		else
+		if (movedCols.length > 0)
 			addIndex = movedCols[Math.floor(Math.random() * movedCols.length)]
 			@cols[addIndex].addDownside(@getRandomKana())
 			@tick++
-			return true
+		@updateState(movedCols.length > 0)
+		return (movedCols.length > 0)
 
 	shiftDown: ->
 		@dropWordCell()
@@ -256,14 +251,12 @@ class KanaTable
 			if result.birthWordsCount > 0
 				@completeWord = true
 				@score += result.birthWordsCount
-		@updateState(movedCols.length > 0)
-		if (movedCols.length == 0)
-			return false
-		else
+		if (movedCols.length > 0)
 			addIndex = movedCols[Math.floor(Math.random() * movedCols.length)]
 			@cols[addIndex].addUpside(@getRandomKana())
 			@tick++
-			return true
+		@updateState(movedCols.length > 0)
+		return (movedCols.length > 0)
 
 	nextStepAvailable: ->
 		# (1) 単語ができている
