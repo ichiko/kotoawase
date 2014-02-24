@@ -94,6 +94,20 @@ class KanaGroup
 		cell_a.completed = cell_b.completed
 		cell_b.completed = tmp
 
+	# 手詰まりか
+	# いずれの条件も満さない場合に真
+	#  (1) 配列内に空きがある
+	#  (2) 言葉になる組合せがある
+	isInDeadlock: ->
+		for i in [0...@cells.length - 1]
+			cell = @cells[i]
+			if (cell.isEmpty())
+				return false
+			cell_b = @cells[i+1]
+			if @comparator.compare(cell.kana, cell_b.kana)
+				return false
+		return true
+
 class KanaRow extends KanaGroup
 	constructor: (@size, @comparator) ->
 		super @size
@@ -258,14 +272,11 @@ class KanaTable
 		# (2) 空セルがある
 		# (3) 単語になる組み合わせがある
 		for row in @rows
-			for i in [0...row.cells.length]
-				cell = row.cells[i]
-				if cell.isEmpty()
-					return true
-				else if i < row.cells.length - 1
-					cell_b = row.cells[i+1]
-					if @comparator.compare(cell.kana, cell_b.kana)
-						return true
+			if ! row.isInDeadlock()
+				return true
+		for col in @cols
+			if ! col.isInDeadlock()
+				return true
 		return false
 
 	updateState: (moved) ->
