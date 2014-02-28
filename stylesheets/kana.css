@@ -1,0 +1,45 @@
+.clear {
+  clear: both; }
+
+.play-panel {
+  align: center;
+  width: 300px;
+  margin-bottom: 20px; }
+  .play-panel .info-panel {
+    width: 100px;
+    float: left; }
+    .play-panel .info-panel .info-heading {
+      background-color: #b0c4de; }
+
+.kana-table {
+  border: 0px; }
+  .kana-table .cell-combined {
+    background-color: orange; }
+  .kana-table .cell-united {
+    background-color: lightgrey; }
+  .kana-table .kana-common {
+    border-bottom-style: solid;
+    border-bottom-width: 5px; }
+  .kana-table .kana-neutral {
+    border-color: white; }
+  .kana-table .kana-combined {
+    border-color: orange; }
+  .kana-table .kana1 {
+    border-color: #f0e68c; }
+  .kana-table .kana2 {
+    border-color: #87cefa; }
+  .kana-table .kana3 {
+    border-color: #9acd32; }
+  .kana-table .kana4 {
+    border-color: #ffe4e1; }
+  .kana-table .kana5 {
+    border-color: #b0c4de; }
+
+.command-table {
+  margin: 20 auto 20 auto;
+  border: 0px; }
+  .command-table .command-column {
+    width: 42px; }
+  .command-table button.command {
+    width: 40px;
+    height: 34px; }
