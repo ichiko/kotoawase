@@ -1,54 +1,76 @@
 <div align="center">
 
 <div class="panel {{messageState}}">
-	<div class="panel-heading">
-		{{message}}
-	</div>
 	<div class="panel-body">
-		つくる言葉: {{words}}
+		{{message}}
 	</div>
 </div>
 
-<table class="kana-table" style="border: 0px;">
-	<tr v-repeat="kanaTable.rows" data-index='{{$index}}'>
-		<td v-repeat="cells">
-			<div class="{{ 'btn btn-default ' + (isCombined() ? 'cell-combined' : ( isUnited() ? 'cell-united' : ''))}}">
-				<span class="{{ 'kana-common ' + (isCombined() ? 'kana-combined' : style ) }}">{{kana}}</span>
-			</div>
-		</td>
-	</tr>
-</table>
+<div class="play-panel">
+	<div class="info-panel text-left">
+		<p class="text-center info-heading">言葉</p>
+		<ul>
+			<li v-repeat="ruleList">{{toString()}}</li>
+		</ul>
+		<p class="text-center info-heading visible-xs">スコア</p>
+		<p class="text-center visible-xs">{{score}}点 / {{tick}}手</p>
+	</div>
+	<div class="kana-panel">
+		<table class="kana-table" style="border: 0px;">
+			<tr v-repeat="kanaTable.rows" data-index='{{$index}}'>
+				<td v-repeat="cells">
+					<div class="{{ 'btn btn-default ' + (isCombined() ? 'cell-combined' : ( isUnited() ? 'cell-united' : ''))}}">
+						<span class="{{ 'kana-common ' + (isCombined() ? 'kana-combined' : style ) }}">{{kana}}</span>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
 
-<p><strong>score: {{score}} / {{tick}} 手</strong></p>
+<div class="clear hidden-xs">
+	<p class="text-center">スコア： <strong>{{score}}点 / {{tick}}手</strong></p>
+	<table class="command-table">
+		<tr>
+			<td class="command-column">
+				<button type="button" class="btn btn-default command"
+					v-on='touchstart: shiftLeft, click: shiftLeft'>←</button>
+			</td>
+			<td class="command-column">
+				<button type="button" class="btn btn-default command"
+					v-on='touchstart: shiftUp, click: shiftUp'>↑</button>
+				<p></p>
+				<button type="button" class="btn btn-default command"
+					v-on='touchstart: shiftDown, click: shiftDown'>↓</button>
+			</td>
+			<td class="command-column">
+				<button type="button" class="btn btn-default command"
+					v-on='touchstart: shiftRight, click: shiftRight'>→</button>
+			</td>
+		</tr>
+	</table>
+</div>
 
-<table class="command-table" style="border: 0;">
-	<tr>
-		<td></td>
-		<td>
-			<button type="button" class="btn btn-default command"
-				v-on='touchstart: shiftUp, click: shiftUp'>↑</button>
-		</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td>
-			<button type="button" class="btn btn-default command"
-				v-on='touchstart: shiftLeft, click: shiftLeft'>←</button>
-		</td>
-		<td></td>
-		<td>
-			<button type="button" class="btn btn-default command"
-				v-on='touchstart: shiftRight, click: shiftRight'>→</button>
-		</td>
-	</tr>
-	<tr>
-		<td></td>
-		<td>
-			<button type="button" class="btn btn-default command"
-				v-on='touchstart: shiftDown, click: shiftDown'>↓</button>
-		</td>
-		<td></td>
-	</tr>
-</table>
+<div class="visible-xs">
+	<table class="command-table">
+		<tr>
+			<td class="command-column">
+				<button type="button" class="btn btn-default command"
+					v-on='touchstart: shiftLeft, click: shiftLeft'>←</button>
+			</td>
+			<td class="command-column">
+				<button type="button" class="btn btn-default command"
+					v-on='touchstart: shiftUp, click: shiftUp'>↑</button>
+				<p></p>
+				<button type="button" class="btn btn-default command"
+					v-on='touchstart: shiftDown, click: shiftDown'>↓</button>
+			</td>
+			<td class="command-column">
+				<button type="button" class="btn btn-default command"
+					v-on='touchstart: shiftRight, click: shiftRight'>→</button>
+			</td>
+		</tr>
+	</table>
+</div>
 
 </div>

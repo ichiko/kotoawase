@@ -1,58 +1,81 @@
 $COLOR_COMBINED: orange;
 $COLOR_UNTIED_BACKGROUND: #d3d3d3;
 
+.clear {
+	clear: both;
+}
+.play-panel {
+	align: center;
+	width: 300px;
+	margin-bottom: 20px;
+
+	.info-panel {
+		width: 100px;
+		float: left;
+
+		.info-heading {
+			background-color: #b0c4de;
+		}
+	}
+	.kana-panel {
+	}
+}
+
 .kana-table {
-	margin: 20 auto 20 auto;
 	border: 0px;
-}
 
-.cell-combined {
-	background-color: $COLOR_COMBINED;
-}
+	.cell-combined {
+		background-color: $COLOR_COMBINED;
+	}
 
-.cell-united {
-	background-color: $COLOR_UNTIED_BACKGROUND;
-}
+	.cell-united {
+		background-color: $COLOR_UNTIED_BACKGROUND;
+	}
 
-.kana-common {
-	border-bottom-style: solid;
-	border-bottom-width: 5px;
-}
+	.kana-common {
+		border-bottom-style: solid;
+		border-bottom-width: 5px;
+	}
 
-.kana-neutral {
-	border-color: white;
-}
+	.kana-neutral {
+		border-color: white;
+	}
 
-.kana-combined {
-	border-color: $COLOR_COMBINED;
-}
+	.kana-combined {
+		border-color: $COLOR_COMBINED;
+	}
 
-.kana1 {
-	border-color: #f0e68c;
-}
+	.kana1 {
+		border-color: #f0e68c;
+	}
 
-.kana2 {
-	border-color: #87cefa;
-}
+	.kana2 {
+		border-color: #87cefa;
+	}
 
-.kana3 {
-	border-color: #9acd32;
-}
+	.kana3 {
+		border-color: #9acd32;
+	}
 
-.kana4 {
-	border-color: #ffe4e1;
-}
+	.kana4 {
+		border-color: #ffe4e1;
+	}
 
-.kana5 {
-	border-color: #b0c4de;
+	.kana5 {
+		border-color: #b0c4de;
+	}
 }
 
 .command-table {
 	margin: 20 auto 20 auto;
 	border: 0px;
-}
 
-.command {
-	width: 40px;
-	height: 34px;
+	.command-column {
+		width: 42px;
+	}
+
+	button.command {
+		width: 40px;
+		height: 34px;
+	}
 }

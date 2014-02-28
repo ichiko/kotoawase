@@ -11,14 +11,12 @@ KEYCODE_DOWN = 40
 
 Vue::attach = (selector) -> $(selector).append @$el
 
-formatRuleList = (ruleList) ->
-	str = ''
+displayRule = (ruleList) ->
+	list = []
 	for cmp in ruleList.list
 		if cmp.isCombineRule()
-			if str.length != 0
-				str += ', '
-			str += cmp.toString()
-	return str
+			list.push cmp
+	return list
 
 $ ->
 	kanaInfoList = []
@@ -44,7 +42,7 @@ $ ->
 			kanaTable: new KanaTable(4, kanaInfoList, ruleList)
 			score: 0
 			tick: 0
-			words: formatRuleList(ruleList)
+			ruleList: displayRule(ruleList)
 			message: '左右上下に移動して、隣あった文字で下記の言葉を作ってください。'
 			messageState: 'panel-default'
 		methods:
