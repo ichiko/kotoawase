@@ -87,11 +87,11 @@ $ ->
 	$('body').keydown( (e) ->
 		switch e.keyCode
 			when KEYCODE_LEFT
-				content.shiftLeft()
+				content.shiftLeft(e)
 			when KEYCODE_UP
-				content.shiftUp()
+				content.shiftUp(e)
 			when KEYCODE_RIGHT
-				content.shiftRight()
+				content.shiftRight(e)
 			when KEYCODE_DOWN
-				content.shiftDown()
+				content.shiftDown(e)
 	)
