@@ -7,7 +7,7 @@ LOOP_MAX = 50
 class KanaInfo
 	constructor: (@kana, @styleClass) ->
 
-	@createAsDefault: ->
+	@CreateAsDefault: ->
 		return new KanaInfo(KanaInfo.DefaultKana, KanaInfo.DefaultStyleClass)
 
 KanaInfo.DefaultKana = Kana_Empty
@@ -20,7 +20,7 @@ class KanaCell
 		@combined = false
 		@united = false
 	isEmpty: ->
-		return (@kana == Kana_Empty)
+		return (@kana == KanaInfo.DefaultKana)
 	combine: ->
 		@combined = true
 	isCombined: ->
@@ -175,7 +175,7 @@ class KanaColumn extends KanaGroup
 class KanaTable
 	# @param size size of table
 	# @param kana array of Hiragana
-	constructor: (@size, @kanaInfoList, @comparator) ->
+	constructor: (@size, @generator, @comparator) ->
 		@rows = []
 		@cols = []
 
@@ -185,7 +185,7 @@ class KanaTable
 		for i in [0...@size]
 			row = new KanaRow(@size, @comparator)
 			for j in [0...@size]
-				cell =  new KanaCell(j, i, KanaInfo.createAsDefault())
+				cell =  new KanaCell(j, i, KanaInfo.CreateAsDefault())
 				row.push cell
 				@cols[j].push cell
 			@rows.push row
@@ -197,23 +197,12 @@ class KanaTable
 		@completeWord = false
 		@state = KanaTable.STATE_MOVED
 
-		kanaCount = Math.floor(@size * @size / 3)
-		count = 0
-		i = 0
-		while (count < kanaCount)
-			if (i > LOOP_MAX)
-				break
-			index = Math.floor(Math.random() * @size * @size)
-			x = index % @size
-			y = (index - x) / @size
-			cell = @rows[y].cells[x]
-			if (cell.isEmpty())
-				cell.setKanaInfo(@getRandomKanaInfo())
-				count++
-			i++
-
-	getRandomKanaInfo: ->
-		return @kanaInfoList[Math.floor(Math.random() * @kanaInfoList.length)]
+		initialTable = @generator.getInitialTable()
+		for y in [0...@size]
+			for x in [0...@size]
+				kanaInfo = initialTable[y][x]
+				if kanaInfo?
+					@rows[y].cells[x].setKanaInfo(kanaInfo)
 
 	# shiftLeft/shiftRight/shiftUp/shiftDown
 	# @return true/false 移動が発生したか
@@ -230,7 +219,7 @@ class KanaTable
 				@score += result.birthWordsCount
 		if (movedRows.length > 0)
 			addIndex = movedRows[Math.floor(Math.random() * movedRows.length)]
-			@rows[addIndex].addRightside(@getRandomKanaInfo())
+			@rows[addIndex].addRightside(@generator.nextKanaInfo())
 			@tick++
 		@updateState(movedRows.length > 0)
 		return (movedRows.length > 0)
@@ -249,7 +238,7 @@ class KanaTable
 				@score += result.birthWordsCount
 		if (movedRows.length > 0)
 			addIndex = movedRows[Math.floor(Math.random() * movedRows.length)]
-			@rows[addIndex].addLeftside(@getRandomKanaInfo())
+			@rows[addIndex].addLeftside(@generator.nextKanaInfo())
 			@tick++
 		@updateState(movedRows.length > 0)
 		return (movedRows.length > 0)
@@ -267,7 +256,7 @@ class KanaTable
 				@score += result.birthWordsCount
 		if (movedCols.length > 0)
 			addIndex = movedCols[Math.floor(Math.random() * movedCols.length)]
-			@cols[addIndex].addDownside(@getRandomKanaInfo())
+			@cols[addIndex].addDownside(@generator.nextKanaInfo())
 			@tick++
 		@updateState(movedCols.length > 0)
 		return (movedCols.length > 0)
@@ -285,7 +274,7 @@ class KanaTable
 				@score += result.birthWordsCount
 		if (movedCols.length > 0)
 			addIndex = movedCols[Math.floor(Math.random() * movedCols.length)]
-			@cols[addIndex].addUpside(@getRandomKanaInfo())
+			@cols[addIndex].addUpside(@generator.nextKanaInfo())
 			@tick++
 		@updateState(movedCols.length > 0)
 		return (movedCols.length > 0)

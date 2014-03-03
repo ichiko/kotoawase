@@ -1,6 +1,7 @@
 fs = require('fs')
 template = fs.readFileSync(__dirname + '/../templates/kanaTable.html')
 
+KanaGenerator = require('./generator.coffee')
 {KanaInfo, KanaTable} = require('./kana.coffee')
 KanaComparationRuleList = require('./compalator.coffee')
 
@@ -36,10 +37,28 @@ $ ->
 	#ruleList.addUnionRule('し')
 	#ruleList.addUnionRule('ま')
 
+	tableSize = 4
+
+	#generator = KanaGenerator.CreateRandomGenerator(tableSize)
+	#generator.initialize(kanaInfoList)
+
+	init = [
+		[kanaInfoList[0], undefined, undefined, undefined],
+		[undefined, kanaInfoList[1], undefined, undefined],
+		[undefined, undefined, kanaInfoList[3], undefined],
+		[undefined, undefined, kanaInfoList[4], undefined]
+	]
+	array = [
+		kanaInfoList[4], kanaInfoList[3], kanaInfoList[2],
+		kanaInfoList[1], kanaInfoList[0]
+	]
+	generator = KanaGenerator.CreateStaticGenerator(tableSize)
+	generator.initialize(init, array)
+
 	content = new Vue
 		template: template
 		data:
-			kanaTable: new KanaTable(4, kanaInfoList, ruleList)
+			kanaTable: new KanaTable(tableSize, generator, ruleList)
 			score: 0
 			tick: 0
 			ruleList: displayRule(ruleList)
