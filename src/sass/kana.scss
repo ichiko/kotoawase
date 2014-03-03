@@ -1,7 +1,17 @@
-$COLOR_COMBINED: orange;
+$COLOR_MAIN: #ffb838;
+//$COLOR_DARKER: #99905f;
+$COLOR_DARKER_LIRHGT: #999274;
+$COLOR_MENTION: #cc8018;
+$COLOR_EMPHASIS: #c8efff;
+$COLOR_EMPHASIS_DARKER: #84d8e0;
+
+$COLOR_COMBINED: $COLOR_MAIN;
 $COLOR_UNTIED_BACKGROUND: #d3d3d3;
-$COLOR_MAIN: #b0c4de;
-$COLOR_MAIN_DARKER: #bbb;
+
+.title {
+	font-weight: bold;
+	color: $COLOR_MAIN;
+}
 
 .clear {
 	clear: both;
@@ -17,22 +27,27 @@ $COLOR_MAIN_DARKER: #bbb;
 		float: left;
 
 		.info-heading {
-			background-color: $COLOR_MAIN;
+			background-color: $COLOR_EMPHASIS;
 		}
 	}
 	.kana-panel {
+		display: table;
+		background-color: $COLOR_EMPHASIS;
+		margin: 0 auto 0 auto;
+		padding: 4px;
 	}
 }
 
 .kana-table {
 	border: 0px;
-	background-color: $COLOR_MAIN;
+	background-color: $COLOR_EMPHASIS;
 
 	.cell {
 		margin: 2px;
 		padding-left: 6px;
 		padding-right: 6px;
-		background-color: $COLOR_MAIN_DARKER;
+		background-color: $COLOR_EMPHASIS_DARKER;
+		border-color: $COLOR_DARKER_LIRHGT;
 	}
 
 	.cell-neutral {
@@ -53,7 +68,7 @@ $COLOR_MAIN_DARKER: #bbb;
 	}
 
 	.kana-neutral {
-		border-color: $COLOR_MAIN_DARKER;
+		border-color: $COLOR_EMPHASIS_DARKER;
 	}
 
 	.kana-combined {
