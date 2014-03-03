@@ -1,9 +1,12 @@
 $COLOR_COMBINED: orange;
 $COLOR_UNTIED_BACKGROUND: #d3d3d3;
+$COLOR_MAIN: #b0c4de;
+$COLOR_MAIN_DARKER: #bbb;
 
 .clear {
 	clear: both;
 }
+
 .play-panel {
 	align: center;
 	width: 300px;
@@ -14,7 +17,7 @@ $COLOR_UNTIED_BACKGROUND: #d3d3d3;
 		float: left;
 
 		.info-heading {
-			background-color: #b0c4de;
+			background-color: $COLOR_MAIN;
 		}
 	}
 	.kana-panel {
@@ -23,6 +26,18 @@ $COLOR_UNTIED_BACKGROUND: #d3d3d3;
 
 .kana-table {
 	border: 0px;
+	background-color: $COLOR_MAIN;
+
+	.cell {
+		margin: 2px;
+		padding-left: 6px;
+		padding-right: 6px;
+		background-color: $COLOR_MAIN_DARKER;
+	}
+
+	.cell-neutral {
+		background-color: #fefefe;
+	}
 
 	.cell-combined {
 		background-color: $COLOR_COMBINED;
@@ -38,7 +53,7 @@ $COLOR_UNTIED_BACKGROUND: #d3d3d3;
 	}
 
 	.kana-neutral {
-		border-color: white;
+		border-color: $COLOR_MAIN_DARKER;
 	}
 
 	.kana-combined {
