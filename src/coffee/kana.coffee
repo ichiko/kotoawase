@@ -131,13 +131,14 @@ class KanaGroup
 	#  (1) 配列内に空きがある
 	#  (2) 言葉になる組合せがある
 	isInDeadlock: ->
-		for i in [0...@cells.length - 1]
+		for i in [0...@cells.length]
 			cell = @cells[i]
 			if (cell.isEmpty())
 				return false
-			cell_b = @cells[i+1]
-			if @comparator.compare(cell.kana, cell_b.kana)
-				return false
+			if (i < @cells.length - 1)
+				cell_b = @cells[i+1]
+				if @comparator.compare(cell.kana, cell_b.kana)
+					return false
 		return true
 
 class KanaRow extends KanaGroup
