@@ -11,6 +11,9 @@ class KanaGenerator
   @CreateRandomGenerator: (size) ->
     return new RandomGenerator(size)
 
+  @CreatePeriodicStarGenerator: (size) ->
+    return new RandomWithPeriodicStarGenerator(size)
+
 class StaticGenerator
   constructor: (@size) ->
 
@@ -44,6 +47,7 @@ class RandomGenerator
   constructor: (@size) ->
 
   initialize: (@kanaInfoList) ->
+    @nextKana = undefined
     # nop
 
   getInitialTable: ->
@@ -61,16 +65,42 @@ class RandomGenerator
       x = index % @size
       y = (index - x) / @size
       if (! table[y][x]?)
-        table[y][x] = @getKanaInfo()
+        table[y][x] = @nextKanaInfo()
         count++
       i++
 
     return table
 
   nextKanaInfo: ->
-    return @getKanaInfo()
+    next = @getKanaInfo()
+    @nextKana = undefined
+    return next
 
   getKanaInfo: ->
-    return @kanaInfoList[Math.floor(Math.random() * @kanaInfoList.length)]
+    if ! @nextKana?
+      @nextKana = @kanaInfoList[Math.floor(Math.random() * @kanaInfoList.length)]
+    return @nextKana
+
+class RandomWithPeriodicStarGenerator extends RandomGenerator
+  constructor: (@size) ->
+
+  initialize: (@kanaInfoList, @periodSize, @starKanaInfo) ->
+    super @kanaInfoList
+    @periodCount = 1
+
+  nextKanaInfo: ->
+    next = @getKanaInfo()
+    @nextKana = undefined
+    return next
+
+  getKanaInfo: ->
+    if ! @nextKana?
+      if @periodCount == @periodSize
+        @nextKana = @starKanaInfo
+        @periodCount = 1
+      else
+        @nextKana = super
+        @periodCount++
+    return @nextKana
 
 module.exports = KanaGenerator
