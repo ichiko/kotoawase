@@ -7,7 +7,7 @@ module.exports = (grunt) ->
 					'src/coffee/*.coffee'
 					'src/templates/*.html'
 				]
-				tasks: ['browserify:app']
+				tasks: ['coffee:app', 'browserify:app']
 			css:
 				files: [
 					'src/sass/*.scss'
@@ -15,7 +15,7 @@ module.exports = (grunt) ->
 				tasks: ['sass']
 		bower:
 			install:
-				options: 
+				options:
 					targetDir: './public/lib'
 					layout: 'byComponent'
 					install: true
@@ -26,19 +26,24 @@ module.exports = (grunt) ->
 			app:
 				files: [
 					'public/script/main.js' : [
-						'src/coffee/kotoawase.coffee'
+						'src/js/kotoawase.js'
 					]
 				]
 				options:
-					transform: ['coffeeify', 'brfs']
-			tutorial:
+					transform: ['brfs']
+			spec:
 				files: [
-					'public/script/tutorial.js' : [
-						'src/coffee/tutorial.coffee'
-					]
+					'spec/js/generator.spec.js' : ['spec/coffee/generator.spec.coffee']
 				]
 				options:
 					transform: ['coffeeify']
+		coffee:
+			app:
+				expand: true
+				cwd: 'src/coffee'
+				src: ['*.coffee']
+				dest: 'src/js/'
+				ext: '.js'
 		sass:
 			dist:
 				expand: true
@@ -61,10 +66,12 @@ module.exports = (grunt) ->
 
 	grunt.loadNpmTasks 'grunt-bower-task'
 	grunt.loadNpmTasks 'grunt-browserify'
+	grunt.loadNpmTasks 'grunt-contrib-coffee'
 	grunt.loadNpmTasks 'grunt-contrib-sass'
 	grunt.loadNpmTasks 'grunt-contrib-uglify'
 	grunt.loadNpmTasks 'grunt-contrib-watch'
 	grunt.registerTask 'default', ['watch']
 	grunt.registerTask 'install', ['bower']
+	grunt.registerTask 'pre-spec', ['coffee:app', 'browserify:spec']
 	grunt.registerTask 'build', ['browserify:app', 'uglify:app']
 	return

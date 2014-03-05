@@ -1,9 +1,9 @@
 fs = require('fs')
 template = fs.readFileSync(__dirname + '/../templates/kanaTable.html')
 
-KanaGenerator = require('./generator.coffee')
-{KanaInfo, KanaTable} = require('./kana.coffee')
-KanaComparationRuleList = require('./compalator.coffee')
+KanaGenerator = require('./generator')
+{KanaInfo, KanaTable} = require('./kana')
+KanaComparationRuleList = require('./compalator')
 
 KEYCODE_LEFT = 37
 KEYCODE_UP = 38

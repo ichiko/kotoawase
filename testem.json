@@ -1,0 +1,17 @@
+{
+  "before_tests":
+    "grunt pre-spec"
+  ,
+
+  "framework": [
+    "jasmine"
+  ],
+
+  "src_files": [
+    "spec/coffee/**/*.coffee"
+  ],
+
+  "serve_files": [
+    "spec/js/**/*.js"
+  ]
+}

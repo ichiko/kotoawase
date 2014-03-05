@@ -8,3 +8,4 @@ public/lib/
 public/script/
 public/stylesheets/
 src/js
+spec/js
