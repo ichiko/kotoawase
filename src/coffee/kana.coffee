@@ -5,22 +5,35 @@ Kana_Empty = '　'
 LOOP_MAX = 50
 
 class KanaInfo
-	constructor: (@kana, @styleClass) ->
+	constructor: (@kana, @styleClass, @type = KanaInfo.TYPE_KANA) ->
+
+	@Create: (kana, styleClass) ->
+		return new KanaInfo(kana, styleClass)
 
 	@CreateAsDefault: ->
 		return new KanaInfo(KanaInfo.DefaultKana, KanaInfo.DefaultStyleClass)
 
+	@CreateAsStar: (kana, styleClass)->
+		return new KanaInfo(kana, styleClass, KanaInfo.TYPE_STAR)
+
 KanaInfo.DefaultKana = Kana_Empty
 KanaInfo.DefaultStyleClass = 'kana-neutral'
+
+KanaInfo.TYPE_KANA = "TYPE_KANA"
+KanaInfo.TYPE_STAR = "TYPE_STAR"
 
 class KanaCell
 	constructor: (@x, @y, kanaInfo) ->
 		@kana = kanaInfo.kana
 		@style = kanaInfo.styleClass
+		@type = kanaInfo.type
 		@combined = false
 		@united = false
+		@willClear = false
 	isEmpty: ->
 		return (@kana == KanaInfo.DefaultKana)
+	isStar: ->
+		return (@type == KanaInfo.TYPE_STAR)
 	combine: ->
 		@combined = true
 	isCombined: ->
@@ -29,17 +42,24 @@ class KanaCell
 		@united = true
 	isUnited: ->
 		return @united
+	markClear: ->
+		@willClear = true
+	willBeClear: ->
+		return @willClear
 	setKanaInfo: (kanaInfo) ->
 		@kana = kanaInfo.kana
 		@style = kanaInfo.styleClass
+		@type = kanaInfo.type
 	setNeutral: ->
 		@combined = false
 		@united = false
 	clear: ->
 		@combined = false
 		@united = false
+		@willClear = false
 		@kana = KanaInfo.DefaultKana
 		@style = KanaInfo.DefaultStyleClass
+		@type = KanaInfo.TYPE_KANA
 
 class ShiftResult
 	# param moved 移動が発生したか
@@ -125,6 +145,9 @@ class KanaGroup
 		tmp = cell_a.style
 		cell_a.style = cell_b.style
 		cell_b.style = tmp
+		tmp = cell_a.type
+		cell_a.type = cell_b.type
+		cell_b.type = tmp
 
 	# 手詰まりか
 	# いずれの条件も満さない場合に真
@@ -218,6 +241,8 @@ class KanaTable
 			if result.birthWordsCount > 0
 				@completeWord = true
 				@score += result.birthWordsCount
+		if @completeWord
+			@markClear()
 		if (movedRows.length > 0)
 			addIndex = movedRows[Math.floor(Math.random() * movedRows.length)]
 			@rows[addIndex].addRightside(@generator.nextKanaInfo())
@@ -237,6 +262,8 @@ class KanaTable
 			if result.birthWordsCount > 0
 				@completeWord = true
 				@score += result.birthWordsCount
+		if @completeWord
+			@markClear()
 		if (movedRows.length > 0)
 			addIndex = movedRows[Math.floor(Math.random() * movedRows.length)]
 			@rows[addIndex].addLeftside(@generator.nextKanaInfo())
@@ -255,6 +282,8 @@ class KanaTable
 			if result.birthWordsCount > 0
 				@completeWord = true
 				@score += result.birthWordsCount
+		if @completeWord
+			@markClear()
 		if (movedCols.length > 0)
 			addIndex = movedCols[Math.floor(Math.random() * movedCols.length)]
 			@cols[addIndex].addDownside(@generator.nextKanaInfo())
@@ -273,6 +302,8 @@ class KanaTable
 			if result.birthWordsCount > 0
 				@completeWord = true
 				@score += result.birthWordsCount
+		if @completeWord
+			@markClear()
 		if (movedCols.length > 0)
 			addIndex = movedCols[Math.floor(Math.random() * movedCols.length)]
 			@cols[addIndex].addUpside(@generator.nextKanaInfo())
@@ -302,6 +333,19 @@ class KanaTable
 		if ((! moved) && nextAvailable)
 			@state = KanaTable.STATE_COULD_NOT_MOVE
 
+	markClear: ->
+		for row in @rows
+			for cell in row.cells
+				if cell.isCombined()
+					if cell.x > 0 && row.cells[cell.x - 1].isStar()
+						row.cells[cell.x - 1].markClear()
+					if cell.x < @size - 1 && row.cells[cell.x + 1].isStar()
+						row.cells[cell.x + 1].markClear()
+					if cell.y > 0 && @rows[cell.y - 1].cells[cell.x].isStar()
+						@rows[cell.y - 1].cells[cell.x].markClear()
+					if cell.y < @size - 1 && @rows[cell.y + 1].cells[cell.x].isStar()
+						@rows[cell.y + 1].cells[cell.x].markClear()
+
 	resetCells: ->
 		if @completeWord
 			for row in @rows
@@ -310,6 +354,8 @@ class KanaTable
 						cell.clear()
 					if cell.isUnited()
 						cell.setNeutral()
+					if cell.willBeClear()
+						cell.clear()
 			@completeWord = false
 
 KanaTable.STATE_MOVED = 'STATE_MOVED'

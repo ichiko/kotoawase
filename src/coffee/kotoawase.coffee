@@ -21,12 +21,15 @@ displayRule = (ruleList) ->
 
 $ ->
 	kanaInfoList = []
-	kanaInfoList.push new KanaInfo('あ', 'kana1')
-	kanaInfoList.push new KanaInfo('い', 'kana2')
-	kanaInfoList.push new KanaInfo('う', 'kana3')
-	kanaInfoList.push new KanaInfo('え', 'kana4')
-	kanaInfoList.push new KanaInfo('お', 'kana5')
-	star = new KanaInfo('★', 'kana6')
+	kanaInfoList.push KanaInfo.Create('あ', 'kana1')
+	kanaInfoList.push KanaInfo.Create('い', 'kana2')
+	kanaInfoList.push KanaInfo.Create('う', 'kana3')
+	kanaInfoList.push KanaInfo.Create('え', 'kana4')
+	kanaInfoList.push KanaInfo.Create('お', 'kana5')
+	star = KanaInfo.CreateAsStar('★', 'kana6')
+
+	console.log kanaInfoList
+	console.log star
 
 	ruleList = new KanaComparationRuleList()
 	ruleList.addCombineRule('あ', 'い', '愛')
@@ -34,6 +37,7 @@ $ ->
 	ruleList.addCombineRule('い', 'え', '家')
 	ruleList.addCombineRule('お', 'う', '王')
 	ruleList.addCombineRule('う', 'え', '上')
+	ruleList.addCombineRule('お', 'い', '甥')
 	# 同じ文字をひとつにするルール
 	#ruleList.addUnionRule('に')
 	#ruleList.addUnionRule('じ')

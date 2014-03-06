@@ -7,6 +7,7 @@ $COLOR_EMPHASIS_DARKER: #84d8e0;
 
 $COLOR_COMBINED: $COLOR_MAIN;
 $COLOR_UNTIED_BACKGROUND: #d3d3d3;
+$COLOR_ERASE: $COLOR_DARKER_LIRHGT;
 
 .title {
 	font-weight: bold;
@@ -62,6 +63,10 @@ $COLOR_UNTIED_BACKGROUND: #d3d3d3;
 		background-color: $COLOR_UNTIED_BACKGROUND;
 	}
 
+	.cell-willerase {
+		background-color: $COLOR_ERASE;
+	}
+
 	.kana-common {
 		border-bottom-style: solid;
 		border-bottom-width: 5px;
@@ -73,6 +78,10 @@ $COLOR_UNTIED_BACKGROUND: #d3d3d3;
 
 	.kana-combined {
 		border-color: $COLOR_COMBINED;
+	}
+
+	.kana-willerase {
+		border-color: $COLOR_ERASE;
 	}
 
 	.kana1 {

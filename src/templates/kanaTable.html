@@ -19,8 +19,8 @@
 		<table class="kana-table" style="border: 0px;">
 			<tr v-repeat="kanaTable.rows" data-index='{{$index}}'>
 				<td v-repeat="cells">
-					<div class="{{ 'btn btn-default cell ' + (isEmpty() ? '' : (isCombined() ? 'cell-combined' : ( isUnited() ? 'cell-united' : 'cell-neutral')))}}">
-						<span class="{{ 'kana-common ' + (isCombined() ? 'kana-combined' : style ) }}">{{kana}}</span>
+					<div class="{{ 'btn btn-default cell ' + (isEmpty() ? '' : (isCombined() ? 'cell-combined' : ( isUnited() ? 'cell-united' : ( willBeClear() ? 'cell-willerase' : 'cell-neutral'))))}}">
+						<span class="{{ 'kana-common ' + (isCombined() ? 'kana-combined' : ( willBeClear() ? 'kana-willerase' : style) ) }}">{{kana}}</span>
 					</div>
 				</td>
 			</tr>
