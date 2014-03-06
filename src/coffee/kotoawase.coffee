@@ -21,15 +21,19 @@ displayRule = (ruleList) ->
 
 $ ->
 	kanaInfoList = []
-	kanaInfoList.push new KanaInfo('に', 'kana1')
-	kanaInfoList.push new KanaInfo('じ', 'kana2')
-	kanaInfoList.push new KanaInfo('か', 'kana3')
-	kanaInfoList.push new KanaInfo('し', 'kana4')
-	kanaInfoList.push new KanaInfo('ま', 'kana5')
+	kanaInfoList.push new KanaInfo('あ', 'kana1')
+	kanaInfoList.push new KanaInfo('い', 'kana2')
+	kanaInfoList.push new KanaInfo('う', 'kana3')
+	kanaInfoList.push new KanaInfo('え', 'kana4')
+	kanaInfoList.push new KanaInfo('お', 'kana5')
+	star = new KanaInfo('★', 'kana6')
 
 	ruleList = new KanaComparationRuleList()
-	ruleList.addCombineRule('に', 'じ', '虹')
-	ruleList.addCombineRule('し', 'ま', '島')
+	ruleList.addCombineRule('あ', 'い', '愛')
+	ruleList.addCombineRule('あ', 'お', '青')
+	ruleList.addCombineRule('い', 'え', '家')
+	ruleList.addCombineRule('お', 'う', '王')
+	ruleList.addCombineRule('う', 'え', '上')
 	# 同じ文字をひとつにするルール
 	#ruleList.addUnionRule('に')
 	#ruleList.addUnionRule('じ')
@@ -41,19 +45,22 @@ $ ->
 
 	#generator = KanaGenerator.CreateRandomGenerator(tableSize)
 	#generator.initialize(kanaInfoList)
+	#
+	# init = [
+	# 	[kanaInfoList[0], undefined, undefined, undefined],
+	# 	[undefined, kanaInfoList[1], undefined, undefined],
+	# 	[undefined, undefined, kanaInfoList[3], undefined],
+	# 	[undefined, undefined, kanaInfoList[4], undefined]
+	# ]
+	# array = [
+	# 	kanaInfoList[4], kanaInfoList[3], kanaInfoList[2],
+	# 	kanaInfoList[1], kanaInfoList[0]
+	# ]
+	# generator = KanaGenerator.CreateStaticGenerator(tableSize)
+	# generator.initialize(init, array)
 
-	init = [
-		[kanaInfoList[0], undefined, undefined, undefined],
-		[undefined, kanaInfoList[1], undefined, undefined],
-		[undefined, undefined, kanaInfoList[3], undefined],
-		[undefined, undefined, kanaInfoList[4], undefined]
-	]
-	array = [
-		kanaInfoList[4], kanaInfoList[3], kanaInfoList[2],
-		kanaInfoList[1], kanaInfoList[0]
-	]
-	generator = KanaGenerator.CreateStaticGenerator(tableSize)
-	generator.initialize(init, array)
+	generator = KanaGenerator.CreatePeriodicStarGenerator(tableSize)
+	generator.initialize(kanaInfoList, kanaInfoList.length + 1, star)
 
 	content = new Vue
 		template: template
