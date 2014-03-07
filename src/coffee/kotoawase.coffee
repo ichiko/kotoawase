@@ -28,9 +28,6 @@ $ ->
 	kanaInfoList.push KanaInfo.Create('お', 'kana5')
 	star = KanaInfo.CreateAsStar('★', 'kana6')
 
-	console.log kanaInfoList
-	console.log star
-
 	ruleList = new KanaComparationRuleList()
 	ruleList.addCombineRule('あ', 'い', '愛')
 	ruleList.addCombineRule('あ', 'お', '青')
