@@ -199,7 +199,7 @@ class KanaColumn extends KanaGroup
 class KanaTable
 	# @param size size of table
 	# @param kana array of Hiragana
-	constructor: (@size, @generator, @comparator) ->
+	constructor: (@size, @generator, @scoreBoard, @comparator) ->
 		@rows = []
 		@cols = []
 
@@ -217,7 +217,6 @@ class KanaTable
 
 	initialize: ->
 		@score = 0
-		@tick = 0
 		@completeWord = false
 		@state = KanaTable.STATE_MOVED
 
@@ -231,6 +230,7 @@ class KanaTable
 	# shiftLeft/shiftRight/shiftUp/shiftDown
 	# @return true/false 移動が発生したか
 	shiftLeft: ->
+		@scoreBoard.startTurn()
 		@resetCells()
 		movedRows = []
 		for i in [0...@rows.length]
@@ -240,18 +240,19 @@ class KanaTable
 				movedRows.push(i)
 			if result.birthWordsCount > 0
 				@completeWord = true
-				@score += result.birthWordsCount
+				@scoreBoard.addBirthWordCount(result.birthWordsCount)
 		if @completeWord
-			@markClear()
+			@scoreBoard.addMarkedStarCount(@markClear())
 		if (movedRows.length > 0)
 			addIndex = movedRows[Math.floor(Math.random() * movedRows.length)]
 			@rows[addIndex].addRightside(@generator.nextKanaInfo())
-			@tick++
 		@updateState(movedRows.length > 0)
+		@scoreBoard.calculateTurn()
 		return (movedRows.length > 0)
 
 
 	shiftRight: ->
+		@scoreBoard.startTurn()
 		@resetCells()
 		movedRows = []
 		for i in [0...@rows.length]
@@ -261,17 +262,18 @@ class KanaTable
 				movedRows.push(i)
 			if result.birthWordsCount > 0
 				@completeWord = true
-				@score += result.birthWordsCount
+				@scoreBoard.addBirthWordCount(result.birthWordsCount)
 		if @completeWord
-			@markClear()
+			@scoreBoard.addMarkedStarCount(@markClear())
 		if (movedRows.length > 0)
 			addIndex = movedRows[Math.floor(Math.random() * movedRows.length)]
 			@rows[addIndex].addLeftside(@generator.nextKanaInfo())
-			@tick++
 		@updateState(movedRows.length > 0)
+		@scoreBoard.calculateTurn()
 		return (movedRows.length > 0)
 
 	shiftUp: ->
+		@scoreBoard.startTurn()
 		@resetCells()
 		movedCols = []
 		for i in [0...@cols.length]
@@ -281,17 +283,18 @@ class KanaTable
 				movedCols.push(i)
 			if result.birthWordsCount > 0
 				@completeWord = true
-				@score += result.birthWordsCount
+				@scoreBoard.addBirthWordCount(result.birthWordsCount)
 		if @completeWord
-			@markClear()
+			@scoreBoard.addMarkedStarCount(@markClear())
 		if (movedCols.length > 0)
 			addIndex = movedCols[Math.floor(Math.random() * movedCols.length)]
 			@cols[addIndex].addDownside(@generator.nextKanaInfo())
-			@tick++
 		@updateState(movedCols.length > 0)
+		@scoreBoard.calculateTurn()
 		return (movedCols.length > 0)
 
 	shiftDown: ->
+		@scoreBoard.startTurn()
 		@resetCells()
 		movedCols = []
 		for i in [0...@cols.length]
@@ -301,14 +304,14 @@ class KanaTable
 				movedCols.push(i)
 			if result.birthWordsCount > 0
 				@completeWord = true
-				@score += result.birthWordsCount
+				@scoreBoard.addBirthWordCount(result.birthWordsCount)
 		if @completeWord
-			@markClear()
+			@scoreBoard.addMarkedStarCount(@markClear())
 		if (movedCols.length > 0)
 			addIndex = movedCols[Math.floor(Math.random() * movedCols.length)]
 			@cols[addIndex].addUpside(@generator.nextKanaInfo())
-			@tick++
 		@updateState(movedCols.length > 0)
+		@scoreBoard.calculateTurn()
 		return (movedCols.length > 0)
 
 	nextStepAvailable: ->
@@ -334,17 +337,23 @@ class KanaTable
 			@state = KanaTable.STATE_COULD_NOT_MOVE
 
 	markClear: ->
+		count = 0
 		for row in @rows
 			for cell in row.cells
 				if cell.isCombined()
 					if cell.x > 0 && row.cells[cell.x - 1].isStar()
 						row.cells[cell.x - 1].markClear()
+						count++
 					if cell.x < @size - 1 && row.cells[cell.x + 1].isStar()
 						row.cells[cell.x + 1].markClear()
+						count++
 					if cell.y > 0 && @rows[cell.y - 1].cells[cell.x].isStar()
 						@rows[cell.y - 1].cells[cell.x].markClear()
+						count++
 					if cell.y < @size - 1 && @rows[cell.y + 1].cells[cell.x].isStar()
 						@rows[cell.y + 1].cells[cell.x].markClear()
+						count++
+		return count
 
 	resetCells: ->
 		if @completeWord
