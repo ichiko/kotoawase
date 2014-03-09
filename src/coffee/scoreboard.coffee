@@ -7,24 +7,26 @@ class ScoreBoard
     @turn = 0
 
   startTurn: ->
-    @turn++
     @wordCount = 0
     @starCount = 0
 
-  calculateTurn: ->
-    add = 0
-    if @wordCount > 0
-      @chain++
-      add += Math.pow(ScoreBoard.PointPerWord, @wordCount) * @chainBonus()
-      if @starCount > 0
-        add += Math.pow(ScoreBoard.PointPerStar, @starCount)
+  calculateTurn: (moved) ->
+    if moved
+      @turn++
 
-      @score += add
-    else
-      @chain = 0
+      add = 0
+      if @wordCount > 0
+        @chain++
+        add += Math.pow(ScoreBoard.PointPerWord, @wordCount) * @chainBonus()
+        if @starCount > 0
+          add += Math.pow(ScoreBoard.PointPerStar, @starCount)
 
-    if ScoreBoard.DEBUG
-      console.log "ScoreBoard", @score, "(+", add, ")"
+        @score += add
+      else
+        @chain = 0
+
+      if ScoreBoard.DEBUG
+        console.log "ScoreBoard", @score, "(+", add, ")"
 
   chainBonus: ->
     return @chain

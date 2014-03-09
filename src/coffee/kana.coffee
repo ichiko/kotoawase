@@ -250,7 +250,7 @@ class KanaTable
 		if @completeWord
 			@scoreBoard.addMarkedStarCount(@markClear())
 		@updateState(movedRows.length > 0)
-		@scoreBoard.calculateTurn()
+		@scoreBoard.calculateTurn(movedRows.length > 0)
 		return (movedRows.length > 0)
 
 
@@ -272,7 +272,7 @@ class KanaTable
 		if @completeWord
 			@scoreBoard.addMarkedStarCount(@markClear())
 		@updateState(movedRows.length > 0)
-		@scoreBoard.calculateTurn()
+		@scoreBoard.calculateTurn(movedRows.length > 0)
 		return (movedRows.length > 0)
 
 	shiftUp: ->
@@ -293,7 +293,7 @@ class KanaTable
 		if @completeWord
 			@scoreBoard.addMarkedStarCount(@markClear())
 		@updateState(movedCols.length > 0)
-		@scoreBoard.calculateTurn()
+		@scoreBoard.calculateTurn(movedCols.length > 0)
 		return (movedCols.length > 0)
 
 	shiftDown: ->
@@ -314,7 +314,7 @@ class KanaTable
 		if @completeWord
 			@scoreBoard.addMarkedStarCount(@markClear())
 		@updateState(movedCols.length > 0)
-		@scoreBoard.calculateTurn()
+		@scoreBoard.calculateTurn(movedCols.length > 0)
 		return (movedCols.length > 0)
 
 	nextStepAvailable: ->
