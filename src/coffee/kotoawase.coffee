@@ -45,11 +45,13 @@ $ ->
 	generator.initialize(kanaInfoList, kanaInfoList.length + 1, star)
 
 	scoreBoard = new ScoreBoard()
+	kanaTable = new KanaTable(tableSize, generator, scoreBoard, ruleList)
 
 	content = new Vue
 		template: template
 		data:
-			kanaTable: new KanaTable(tableSize, generator, scoreBoard, ruleList)
+			kanaTable: kanaTable
+			nextKana: kanaTable.getNextKanaInfo()
 			scoreBoard: scoreBoard
 			ruleList: displayRule(ruleList)
 			message: '左右上下に動かして、ひらがな2文字で下記の言葉を作ってください。'
@@ -58,19 +60,24 @@ $ ->
 			shiftUp: (e) ->
 				e.preventDefault()
 				@$data.kanaTable.shiftUp()
-				@updateMessage()
+				@update()
 			shiftDown: (e) ->
 				e.preventDefault()
 				@$data.kanaTable.shiftDown()
-				@updateMessage()
+				@update()
 			shiftLeft: (e) ->
 				e.preventDefault()
 				@$data.kanaTable.shiftLeft()
-				@updateMessage()
+				@update()
 			shiftRight: (e) ->
 				e.preventDefault()
 				@$data.kanaTable.shiftRight()
+				@update()
+			update: ->
+				@updateProperties()
 				@updateMessage()
+			updateProperties: ->
+				@$data.nextKana = @$data.kanaTable.getNextKanaInfo()
 			updateMessage: ->
 				switch @$data.kanaTable.state
 					when KanaTable.STATE_MOVED

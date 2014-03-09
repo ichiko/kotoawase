@@ -8,23 +8,36 @@
 
 <div class="play-panel">
 	<div class="info-panel text-left">
+		<p class="text-center info-heading short-margin visible-xs">Next Kana</p>
+		<div class="kana-next text-center visible-xs">
+			<div class="btn btn-default cell cell-neutral">
+				<span class="{{ 'kana-common ' + nextKana.styleClass }}">{{nextKana.kana}}</span>
+			</div>
+		</div>
+		<p class="text-center info-heading visible-xs">スコア</p>
+		<p class="text-center visible-xs">{{scoreBoard.score}}点 / {{scoreBoard.turn}}手</p>
 		<p class="text-center info-heading">言葉</p>
 		<ul>
 			<li v-repeat="ruleList">{{toString()}}</li>
 		</ul>
-		<p class="text-center info-heading visible-xs">スコア</p>
-		<p class="text-center visible-xs">{{scoreBoard.score}}点 / {{scoreBoard.turn}}手</p>
 	</div>
 	<div class="kana-panel">
-		<table class="kana-table" style="border: 0px;">
-			<tr v-repeat="kanaTable.rows" data-index='{{$index}}'>
-				<td v-repeat="cells">
-					<div class="{{ 'btn btn-default cell ' + (isEmpty() ? '' : (isCombined() ? 'cell-combined' : ( isUnited() ? 'cell-united' : ( willBeClear() ? 'cell-willerase' : 'cell-neutral'))))}}">
-						<span class="{{ 'kana-common ' + (isCombined() ? 'kana-combined' : ( willBeClear() ? 'kana-willerase' : style) ) }}">{{kana}}</span>
-					</div>
-				</td>
-			</tr>
-		</table>
+		<div class="kana-next hidden-xs">
+			<div class="btn btn-default cell cell-neutral">
+				<span class="{{ 'kana-common ' + nextKana.styleClass }}">{{nextKana.kana}}</span>
+			</div>
+		</div>
+		<div class="kana-table-wrap">
+			<table class="kana-table" style="border: 0px;">
+				<tr v-repeat="kanaTable.rows" data-index='{{$index}}'>
+					<td v-repeat="cells">
+						<div class="{{ 'btn btn-default cell ' + (isEmpty() ? '' : (isCombined() ? 'cell-combined' : ( isUnited() ? 'cell-united' : ( willBeClear() ? 'cell-willerase' : 'cell-neutral'))))}}">
+							<span class="{{ 'kana-common ' + (isCombined() ? 'kana-combined' : ( willBeClear() ? 'kana-willerase' : style) ) }}">{{kana}}</span>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
 	</div>
 </div>
 

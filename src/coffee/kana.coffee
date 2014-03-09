@@ -370,6 +370,9 @@ class KanaTable
 						cell.clear()
 			@completeWord = false
 
+	getNextKanaInfo: ->
+		return @generator.getKanaInfo()
+
 KanaTable.STATE_MOVED = 'STATE_MOVED'
 KanaTable.STATE_COULD_NOT_MOVE = 'STATE_COULD_NOT_MOVE'
 KanaTable.STATE_GAMEOVER = 'STATE_GAMEOVER'

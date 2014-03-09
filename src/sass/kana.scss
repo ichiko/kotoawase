@@ -18,6 +18,10 @@ $COLOR_ERASE: $COLOR_DARKER_LIRHGT;
 	clear: both;
 }
 
+.short-margin {
+	margin-bottom: 2px;
+}
+
 .play-panel {
 	align: center;
 	width: 300px;
@@ -33,80 +37,86 @@ $COLOR_ERASE: $COLOR_DARKER_LIRHGT;
 	}
 	.kana-panel {
 		display: table;
-		background-color: $COLOR_EMPHASIS;
 		margin: 0 auto 0 auto;
-		padding: 4px;
 	}
+}
+
+.kana-next {
+	margin: 4px;
+}
+
+.kana-table-wrap {
+	padding: 4px;
+	background-color: $COLOR_EMPHASIS;
 }
 
 .kana-table {
 	border: 0px;
-	background-color: $COLOR_EMPHASIS;
+}
 
-	.cell {
-		margin: 2px;
-		padding-left: 6px;
-		padding-right: 6px;
-		background-color: $COLOR_EMPHASIS_DARKER;
-		border-color: $COLOR_DARKER_LIRHGT;
-	}
+.cell {
+	margin: 2px;
+	padding-left: 6px;
+	padding-right: 6px;
+	background-color: $COLOR_EMPHASIS_DARKER;
+	border-color: $COLOR_DARKER_LIRHGT;
+}
 
-	.cell-neutral {
-		background-color: #fefefe;
-	}
+.cell-neutral {
+	background-color: #fefefe;
+}
 
-	.cell-combined {
-		background-color: $COLOR_COMBINED;
-	}
+.cell-combined {
+	background-color: $COLOR_COMBINED;
+}
 
-	.cell-united {
-		background-color: $COLOR_UNTIED_BACKGROUND;
-	}
+.cell-united {
+	background-color: $COLOR_UNTIED_BACKGROUND;
+}
 
-	.cell-willerase {
-		background-color: $COLOR_ERASE;
-	}
+.cell-willerase {
+	background-color: $COLOR_ERASE;
+}
 
-	.kana-common {
-		border-bottom-style: solid;
-		border-bottom-width: 5px;
-	}
+.kana-common {
+	border-bottom-style: solid;
+	border-bottom-width: 5px;
+}
 
-	.kana-neutral {
-		border-color: $COLOR_EMPHASIS_DARKER;
-	}
+.kana-neutral {
+	border-color: $COLOR_EMPHASIS_DARKER;
+}
 
-	.kana-combined {
-		border-color: $COLOR_COMBINED;
-	}
+.kana-combined {
+	border-color: $COLOR_COMBINED;
+}
 
-	.kana-willerase {
-		border-color: $COLOR_ERASE;
-	}
+.kana-willerase {
+	border-color: $COLOR_ERASE;
+}
 
-	.kana1 {
-		border-color: #f0e68c;
-	}
+.kana1 {
+	border-color: #f0e68c;
+}
 
-	.kana2 {
-		border-color: #87cefa;
-	}
+.kana2 {
+	border-color: #87cefa;
+}
 
-	.kana3 {
-		border-color: #9acd32;
-	}
+.kana3 {
+	border-color: #9acd32;
+}
 
-	.kana4 {
-		border-color: #ffe4e1;
-	}
+.kana4 {
+	border-color: #ffe4e1;
+}
 
-	.kana5 {
-		border-color: #b0c4de;
-	}
+.kana5 {
+	border-color: #b0c4de;
+}
 
-	.kana6 {
-		border-color: #ffdab9;
-	}
+.kana6 {
+	border-color: #ffdab9;
 }
 
 .command-table {
