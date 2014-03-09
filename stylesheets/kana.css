@@ -1,5 +1,12 @@
+.title {
+  font-weight: bold;
+  color: #ffb838; }
+
 .clear {
   clear: both; }
+
+.short-margin {
+  margin-bottom: 2px; }
 
 .play-panel {
   align: center;
@@ -9,31 +16,70 @@
     width: 100px;
     float: left; }
     .play-panel .info-panel .info-heading {
-      background-color: #b0c4de; }
+      background-color: #c8efff; }
+  .play-panel .kana-panel {
+    display: table;
+    margin: 0 auto 0 auto; }
+
+.kana-next {
+  margin: 4px; }
+
+.kana-table-wrap {
+  padding: 4px;
+  background-color: #c8efff; }
 
 .kana-table {
   border: 0px; }
-  .kana-table .cell-combined {
-    background-color: orange; }
-  .kana-table .cell-united {
-    background-color: lightgrey; }
-  .kana-table .kana-common {
-    border-bottom-style: solid;
-    border-bottom-width: 5px; }
-  .kana-table .kana-neutral {
-    border-color: white; }
-  .kana-table .kana-combined {
-    border-color: orange; }
-  .kana-table .kana1 {
-    border-color: #f0e68c; }
-  .kana-table .kana2 {
-    border-color: #87cefa; }
-  .kana-table .kana3 {
-    border-color: #9acd32; }
-  .kana-table .kana4 {
-    border-color: #ffe4e1; }
-  .kana-table .kana5 {
-    border-color: #b0c4de; }
+
+.cell {
+  margin: 2px;
+  padding-left: 6px;
+  padding-right: 6px;
+  background-color: #84d8e0;
+  border-color: #999274; }
+
+.cell-neutral {
+  background-color: #fefefe; }
+
+.cell-combined {
+  background-color: #ffb838; }
+
+.cell-united {
+  background-color: lightgrey; }
+
+.cell-willerase {
+  background-color: #999274; }
+
+.kana-common {
+  border-bottom-style: solid;
+  border-bottom-width: 5px; }
+
+.kana-neutral {
+  border-color: #84d8e0; }
+
+.kana-combined {
+  border-color: #ffb838; }
+
+.kana-willerase {
+  border-color: #999274; }
+
+.kana1 {
+  border-color: #f0e68c; }
+
+.kana2 {
+  border-color: #87cefa; }
+
+.kana3 {
+  border-color: #9acd32; }
+
+.kana4 {
+  border-color: #ffe4e1; }
+
+.kana5 {
+  border-color: #b0c4de; }
+
+.kana6 {
+  border-color: #ffdab9; }
 
 .command-table {
   margin: 20 auto 20 auto;
