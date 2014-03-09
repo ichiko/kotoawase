@@ -53,6 +53,7 @@ class KanaCell
 	setNeutral: ->
 		@combined = false
 		@united = false
+		@willClear = false
 	clear: ->
 		@combined = false
 		@united = false
@@ -241,11 +242,11 @@ class KanaTable
 			if result.birthWordsCount > 0
 				@completeWord = true
 				@scoreBoard.addBirthWordCount(result.birthWordsCount)
-		if @completeWord
-			@scoreBoard.addMarkedStarCount(@markClear())
 		if (movedRows.length > 0)
 			addIndex = movedRows[Math.floor(Math.random() * movedRows.length)]
 			@rows[addIndex].addRightside(@generator.nextKanaInfo())
+		if @completeWord
+			@scoreBoard.addMarkedStarCount(@markClear())
 		@updateState(movedRows.length > 0)
 		@scoreBoard.calculateTurn()
 		return (movedRows.length > 0)
@@ -263,11 +264,11 @@ class KanaTable
 			if result.birthWordsCount > 0
 				@completeWord = true
 				@scoreBoard.addBirthWordCount(result.birthWordsCount)
-		if @completeWord
-			@scoreBoard.addMarkedStarCount(@markClear())
 		if (movedRows.length > 0)
 			addIndex = movedRows[Math.floor(Math.random() * movedRows.length)]
 			@rows[addIndex].addLeftside(@generator.nextKanaInfo())
+		if @completeWord
+			@scoreBoard.addMarkedStarCount(@markClear())
 		@updateState(movedRows.length > 0)
 		@scoreBoard.calculateTurn()
 		return (movedRows.length > 0)
@@ -284,11 +285,11 @@ class KanaTable
 			if result.birthWordsCount > 0
 				@completeWord = true
 				@scoreBoard.addBirthWordCount(result.birthWordsCount)
-		if @completeWord
-			@scoreBoard.addMarkedStarCount(@markClear())
 		if (movedCols.length > 0)
 			addIndex = movedCols[Math.floor(Math.random() * movedCols.length)]
 			@cols[addIndex].addDownside(@generator.nextKanaInfo())
+		if @completeWord
+			@scoreBoard.addMarkedStarCount(@markClear())
 		@updateState(movedCols.length > 0)
 		@scoreBoard.calculateTurn()
 		return (movedCols.length > 0)
@@ -305,11 +306,11 @@ class KanaTable
 			if result.birthWordsCount > 0
 				@completeWord = true
 				@scoreBoard.addBirthWordCount(result.birthWordsCount)
-		if @completeWord
-			@scoreBoard.addMarkedStarCount(@markClear())
 		if (movedCols.length > 0)
 			addIndex = movedCols[Math.floor(Math.random() * movedCols.length)]
 			@cols[addIndex].addUpside(@generator.nextKanaInfo())
+		if @completeWord
+			@scoreBoard.addMarkedStarCount(@markClear())
 		@updateState(movedCols.length > 0)
 		@scoreBoard.calculateTurn()
 		return (movedCols.length > 0)

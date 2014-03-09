@@ -34,6 +34,7 @@ module.exports = (grunt) ->
 			spec:
 				files: [
 					'spec/js/generator.spec.js' : ['spec/coffee/generator.spec.coffee']
+					'spec/js/kana.spec.js' : ['spec/coffee/kana.spec.coffee']
 				]
 				options:
 					transform: ['coffeeify']
