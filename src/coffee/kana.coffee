@@ -44,6 +44,8 @@ class KanaCell
 		return @united
 	markClear: ->
 		@willClear = true
+		tmp = @kana
+		@kana = tmp
 	willBeClear: ->
 		return @willClear
 	setKanaInfo: (kanaInfo) ->

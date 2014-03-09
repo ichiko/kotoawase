@@ -36,6 +36,9 @@ describe 'KanaTable', ->
   cellIsStarAndMarked = (table, y, x) ->
     expect(table.rows[y].cells[x].isStar()).toBe(true)
     expect(table.rows[y].cells[x].willBeClear()).toBe(true)
+    expect(table.rows[y].cells[x].isEmpty()).toBe(false)
+    expect(table.rows[y].cells[x].isCombined()).toBe(false)
+    expect(table.rows[y].cells[x].isUnited()).toBe(false)
 
   describe '左に移動させたとき', ->
     describe '[0,0]に言葉ができたとき', ->
